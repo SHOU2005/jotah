@@ -37,5 +37,47 @@
       ]
     }
   ],
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/guides/how-to-roll-with-rolling-paper",
+      "destination": "/guides/how-to-fill-a-pre-rolled-cone",
+      "permanent": true
+    },
+    {
+      "source": "/guides/what-is-gsm-in-rolling-paper",
+      "destination": "/guides/what-does-13-8-gsm-mean",
+      "permanent": true
+    },
+    {
+      "source": "/guides/rolling-paper-sizes-explained",
+      "destination": "/guides/pre-rolled-cone-sizes-explained",
+      "permanent": true
+    },
+    {
+      "source": "/guides/slow-burn-rolling-papers",
+      "destination": "/guides/slow-burn-cones",
+      "permanent": true
+    },
+    {
+      "source": "/guides/how-to-store-rolling-papers",
+      "destination": "/guides/how-to-store-pre-rolled-cones",
+      "permanent": true
+    },
+    {
+      "source": "/guides/rolling-papers-india-buying-guide",
+      "destination": "/guides/pre-rolled-cones-india-buying-guide",
+      "permanent": true
+    },
+    {
+      "source": "/guides/where-to-buy-rolling-papers-gurgaon",
+      "destination": "/guides/where-to-buy-pre-rolled-cones-gurgaon",
+      "permanent": true
+    },
+    {
+      "source": "/guides/rolling-paper-glossary",
+      "destination": "/guides",
+      "permanent": true
+    }
+  ]
 }

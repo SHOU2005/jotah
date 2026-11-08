@@ -6,7 +6,7 @@ import { WHATSAPP_URL } from "@/lib/contact";
 import { usePageMeta } from "@/lib/seo";
 
 const steps = [
-  ["01", "Find the code", "Look on top of your Jotah pack — “What The Fun → Scan for surprise”."],
+  ["01", "Find the code", "Look on the side of your Jotah pack — “What The Fun → Scan for surprise”."],
   ["02", "Scan or tap", "Scan the QR, or just tap the button below. It opens WhatsApp with “What The Fun” already typed."],
   ["03", "Hit send", "Send it to +91 92056 17375 and we'll send your surprise right back."],
 ];

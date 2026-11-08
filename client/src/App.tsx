@@ -8,6 +8,7 @@ import { CartDrawer } from "@/components/cart";
 import Checkout from "@/pages/checkout";
 import Admin from "@/pages/admin";
 import { GuideArticle, GuidesIndex } from "@/pages/guides";
+import Game from "@/pages/game";
 import Home from "@/pages/home";
 import Product from "@/pages/product";
 import WhatTheFun from "@/pages/what-the-fun";
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/what-the-fun" component={WhatTheFun} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/admin" component={Admin} />
+      <Route path="/game" component={Game} />
       <Route path="/guides" component={GuidesIndex} />
       <Route path="/guides/:slug" component={GuideArticle} />
       <Route component={NotFound} />

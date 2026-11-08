@@ -1,7 +1,7 @@
 // Guide articles. Plain data so the site, the prerenderer and the sitemap
 // all read the same source. Body uses a tiny markdown subset:
 //   "## Heading", "- list item", "> tip", blank line = new paragraph.
-// Keep everything factual and about tobacco/herbal rolling only (18+).
+// Keep everything factual and about tobacco/legal herbal blends only (18+).
 
 export interface Guide {
   slug: string;
@@ -14,148 +14,173 @@ export interface Guide {
 
 export const GUIDES: Guide[] = [
   {
-    slug: "how-to-roll-with-rolling-paper",
-    title: "How to Roll with Rolling Paper: A Step-by-Step Guide for Beginners",
-    description: "Learn how to roll a neat, even smoke with rolling paper in 7 simple steps — plus the common mistakes that make a roll loose, lumpy or burn unevenly.",
-    updated: "2026-11-08",
-    readMins: 5,
-    body: `Rolling your own looks tricky the first time, but it comes down to a few simple habits. Here's a clear, beginner-friendly method that works with any standard rolling paper.
+    slug: "how-to-fill-a-pre-rolled-cone",
+    title: "How to Fill a Pre-Rolled Cone: A Simple Step-by-Step Guide",
+    description: "Pre-rolled cones take the hard part out of rolling. Here's how to fill, pack and close a cone in 6 easy steps — plus the mistakes that cause an uneven burn.",
+    updated: "2026-11-09",
+    readMins: 4,
+    body: `Pre-rolled cones are already shaped and tipped, so you skip the rolling. All you do is fill, pack and close. Here's how to get a neat, even result every time.
 
-> This guide is for adults (18+) rolling tobacco or legal herbal blends.
+> This guide is for adults (18+) using tobacco or legal herbal blends.
 
 ## What you need
 
-- A rolling paper (thin papers like 13.8 GSM are easier to tuck and burn more evenly)
+- A pre-rolled cone
 - Your blend, broken up evenly — no big clumps or stems
-- A filter tip or roach (optional, but it makes the roll easier to hold and smoke)
-- A clean, flat surface
+- A packing stick, or anything thin like a pen refill or a clean toothpick
+- A sheet of paper or a small funnel (optional, but less mess)
 
 ## Step 1: Prepare your blend
 
-Break the blend into small, even pieces. Most uneven burns start here — clumps create air pockets, and stems can tear the paper.
+Break the blend into small, even pieces. Fine, even material packs better and burns more steadily than chunky bits.
 
-## Step 2: Hold the paper the right way
+## Step 2: Open the cone
 
-Hold the paper with the gum strip at the top, facing you. Crease the paper gently down the middle to create a small channel for the blend.
+Gently open the wide end of the cone. Hold it by the tip, wide end up.
 
-## Step 3: Add the tip (if using one)
+## Step 3: Fill a little at a time
 
-Place the tip at one end of the paper. It gives you something firm to roll against and keeps the mouth end clean.
+Add a small amount of blend through the wide end. A folded sheet of paper works as a simple funnel.
 
-## Step 4: Fill evenly
+## Step 4: Pack gently
 
-Spread the blend evenly along the crease. Don't overfill — about two-thirds full is plenty for beginners. Even spread = even burn.
+Tap the tip lightly on a table and use your packing stick to press the blend down. Don't pack too hard — the cone still needs air to draw. Repeat steps 3 and 4 until the cone is about three-quarters full.
 
-## Step 5: Shape it
+## Step 5: Leave room at the top
 
-Pinch the paper between your thumbs and index fingers and roll it back and forth. This packs the blend into a cylinder. Take your time here; this is what makes a roll firm instead of floppy.
+Leave a little empty paper at the wide end. You'll need it to close the cone.
 
-## Step 6: Tuck and roll
+## Step 6: Twist to close
 
-Tuck the side of the paper nearest to you (the side without gum) over the blend and under the far edge. Then roll upward, using your thumbs to keep it tight, until only the gum strip is showing.
-
-## Step 7: Seal
-
-Lightly lick the gum strip and finish the roll to seal it. Press gently along the seam. Twist the open end closed or pack it lightly with a pen tip.
+Pinch the empty paper at the top and twist it closed, like a sweet wrapper. It's ready.
 
 ## Common mistakes
 
-- **Overfilling** — makes the paper hard to tuck and the roll loose.
-- **Uneven filling** — causes "canoeing", where one side burns faster.
-- **Too much saliva on the gum** — the seam stays wet and peels open.
-- **Rolling too loose** — burns fast and hot.
+- **Packing too tight** — hard to draw.
+- **Packing too loose** — burns fast and unevenly.
+- **Uneven filling** — air pockets cause "canoeing", where one side burns ahead.
+- **Overfilling** — no paper left to twist closed.
 
-## Practice tips
-
-Your first few rolls won't be perfect, and that's normal. Thin papers are less forgiving of rough handling but reward you with a cleaner, slower burn once you get the feel.
-
-Want to practise? [Get a 5-Pack of Jotah](/product) — enough papers to get really good at it.`,
+Ready to try? [Get Jotah pre-rolled cones](/product) — ₹15 a cone.`,
   },
   {
-    slug: "what-is-gsm-in-rolling-paper",
-    title: "What Does GSM Mean in Rolling Paper? Why 13.8 GSM Matters",
-    description: "GSM is the weight — and thickness — of rolling paper. Here's what the number means, how it changes taste and burn, and why thin papers like 13.8 GSM are popular.",
-    updated: "2026-11-08",
+    slug: "pre-rolled-cones-vs-rolling-papers",
+    title: "Pre-Rolled Cones vs Rolling Papers: Which Should You Choose?",
+    description: "Cones or papers? A simple comparison of pre-rolled cones and rolling papers — ease, consistency, speed, cost — so you can pick what suits you.",
+    updated: "2026-11-09",
     readMins: 4,
-    body: `If you've seen "13.8 GSM" printed on a pack of rolling papers, it's telling you how thin the paper is. Here's what that number actually means and why it matters.
+    body: `Both cones and papers do the same job, but they suit different people. Here's an honest comparison.
 
-## GSM = grams per square metre
+## What's the difference?
 
-GSM stands for **grams per square metre**. It's the standard way to measure paper weight. A sheet of regular office printer paper is usually around 70–80 GSM. Rolling papers are much lighter — most sit somewhere in the low-to-mid teens.
+- **Rolling papers** are flat sheets. You shape, roll and seal them yourself.
+- **Pre-rolled cones** come already rolled into a cone shape, usually with a tip inside. You just fill and twist.
 
-The lower the GSM, the lighter and thinner the paper.
+## Ease of use
 
-## Why thin paper matters
+Cones win for beginners. Rolling a neat smoke takes practice; filling a cone takes a minute. If you've ever struggled with a loose or lumpy roll, a cone solves that.
 
-- **Cleaner taste.** Less paper means less paper burning, so you taste more of your blend and less of the paper.
-- **Slower, more even burn.** Thin papers tend to burn more steadily when the roll is packed well.
-- **Less ash.** Lighter paper leaves less behind.
+## Consistency
 
-## The trade-off
+A cone has the same shape every time, so it burns more predictably. Hand-rolled papers depend on your technique and mood.
 
-Ultra-thin papers need a little more care. They can tear if handled roughly, and they're more sensitive to humidity. That's why storage matters — especially during the Indian monsoon. (See our guide on [how to store rolling papers](/guides/how-to-store-rolling-papers).)
+## Speed
 
-## Where 13.8 GSM sits
+Cones are faster, especially when you're out or don't have a flat surface to roll on.
 
-At 13.8 GSM, Jotah papers are on the thin side — light enough for a clean taste and slow burn, while still being easy to roll for everyday use.
+## Control
 
-## Quick summary
+Papers give you more control over size and shape. Some experienced rollers enjoy the ritual.
 
-- GSM = paper weight per square metre
-- Lower GSM = thinner paper
-- Thinner paper = cleaner taste, less ash, steadier burn (if rolled well)
-- Thin papers need dry storage
+## Cost
 
-Try it yourself: [Jotah rolling papers, 13.8 GSM](/product).`,
+Papers usually cost less per sheet, but cones save time and wasted papers from failed rolls. Jotah cones are ₹15 each.
+
+## Which should you choose?
+
+- **New to it, or want it quick and neat?** Go for cones.
+- **Love the ritual and want full control?** Papers are for you.
+
+Try a cone: [Jotah pre-rolled cones](/product). Learn more: [how to fill a cone](/guides/how-to-fill-a-pre-rolled-cone).`,
   },
   {
-    slug: "rolling-paper-sizes-explained",
-    title: "Rolling Paper Sizes Explained: Single Wide, 1¼ and King Size",
-    description: "Single wide, 1¼, king size slim — what do rolling paper sizes mean and which one should you choose? A simple guide with a size comparison.",
-    updated: "2026-11-08",
-    readMins: 4,
-    body: `Walk into any paan shop and you'll see rolling papers in different lengths. The names can be confusing, so here's a simple breakdown.
+    slug: "pre-rolled-cone-sizes-explained",
+    title: "Pre-Rolled Cone Sizes Explained: Which Size Is Right for You?",
+    description: "Cone sizes like 70 mm, 1¼ (84 mm) and king size (109 mm) explained simply — what they mean and how to choose the right one.",
+    updated: "2026-11-09",
+    readMins: 3,
+    body: `Cones come in a few standard lengths. The names can be confusing, so here's a quick guide.
 
-## The common sizes
+## Common cone sizes
 
-- **Single wide (regular)** — the classic small size, roughly 68–70 mm long. Good for a short, single smoke.
-- **1¼ (one and a quarter)** — a little longer and wider, around 76–79 mm. A popular middle ground.
-- **1½** — slightly bigger again.
-- **King size** — long papers, around 105–110 mm. King size **slim** papers are narrower, which helps them burn more evenly.
+- **Small / mini (around 70 mm)** — a short, quick smoke.
+- **1¼ (around 84 mm)** — the most popular everyday size.
+- **98 mm** — a little bigger, good for a longer session.
+- **King size (around 109 mm)** — the largest common size, often used for sharing.
 
-Exact measurements vary a little by brand, so always check the pack.
+Exact sizes vary by brand, so always check the pack.
 
 ## How to choose
 
-- **New to rolling?** Start with a mid size like 1¼. It's long enough to be forgiving but not so big that it's hard to handle.
-- **Sharing?** Longer papers like king size are the usual choice.
-- **Want a slower burn?** Narrower ("slim") papers usually burn more evenly than wide ones.
+- **Just you?** A smaller or 1¼ cone is usually enough.
+- **Sharing?** Go bigger.
+- **New to cones?** Start small — they're easier to fill evenly.
 
-## Size vs thickness
+## Size isn't thickness
 
-Size is length and width. Thickness is measured in GSM (see [what GSM means](/guides/what-is-gsm-in-rolling-paper)). A long paper can still be ultra-thin — the two are separate choices.
+Size is the length of the cone. Thickness is the paper weight, measured in GSM — see [what 13.8 GSM means](/guides/what-does-13-8-gsm-mean). A big cone can still use ultra-thin paper.
 
-## Don't overfill
+## Filling tip
 
-Whatever the size, the most common mistake is overfilling. A bigger paper doesn't mean you should pack in more than you can roll neatly. See our [step-by-step rolling guide](/guides/how-to-roll-with-rolling-paper).`,
+Whatever the size, fill a little at a time and pack gently. See our [step-by-step filling guide](/guides/how-to-fill-a-pre-rolled-cone).`,
   },
   {
-    slug: "slow-burn-rolling-papers",
-    title: "Slow Burn Rolling Papers: What Makes a Paper Burn Evenly?",
-    description: "Why do some rolls burn fast, run or 'canoe'? The real reasons a rolling paper burns slow and even — paper thickness, packing, humidity and technique.",
-    updated: "2026-11-08",
-    readMins: 4,
-    body: `"Slow burn" is printed on a lot of packs — including ours. But a slow, even burn depends on both the paper and how you roll it. Here's what actually makes the difference.
+    slug: "what-does-13-8-gsm-mean",
+    title: "What Does 13.8 GSM Mean on a Cone or Rolling Paper?",
+    description: "GSM is paper weight — and it decides how thin your cone is. What the number means, how it affects taste and burn, and why thin 13.8 GSM paper is popular.",
+    updated: "2026-11-09",
+    readMins: 3,
+    body: `If you've seen "13.8 GSM" on the side of a Jotah pack, it's telling you how thin the paper is.
 
-## 1. Paper thickness
+## GSM = grams per square metre
 
-Thinner papers (lower GSM) have less material to burn. When rolled well, they tend to burn more steadily and leave less ash. Jotah papers are 13.8 GSM.
+GSM stands for **grams per square metre** — the standard way to measure paper weight. Office printer paper is usually 70–80 GSM. Smoking papers are far lighter.
 
-## 2. How evenly the roll is packed
+Lower GSM means lighter, thinner paper.
 
-This is the biggest factor you control. Air pockets and clumps make one part burn faster than the rest. Break your blend up evenly and spread it along the full length of the paper.
+## Why thin paper matters
 
-## 3. How tight you roll
+- **Cleaner taste.** Less paper burning means you taste your blend, not the paper.
+- **Slower, steadier burn** when the cone is packed evenly.
+- **Less ash.**
+
+## The trade-off
+
+Thin paper is more delicate and more sensitive to humidity. Store your cones dry — see [how to store cones in monsoon](/guides/how-to-store-pre-rolled-cones).
+
+## Where 13.8 GSM sits
+
+At 13.8 GSM, Jotah cones use thin, fine paper from France — light enough for a clean taste and slow burn, while staying firm enough to hold their shape.
+
+[Try Jotah cones →](/product)`,
+  },
+  {
+    slug: "slow-burn-cones",
+    title: "Slow Burn Cones: What Makes a Cone Burn Evenly?",
+    description: "Why do some cones burn fast or 'canoe'? The real reasons a cone burns slow and even — paper, packing, moisture and how you light it.",
+    updated: "2026-11-09",
+    readMins: 3,
+    body: `"Slow burn" is printed on our pack. But a slow, even burn depends on both the cone and how you fill it.
+
+## 1. Thin paper
+
+Thinner paper (lower GSM) has less material to burn and leaves less ash. Jotah cones use 13.8 GSM paper from France.
+
+## 2. Even packing
+
+This is the biggest factor you control. Clumps and air pockets make one side burn faster. Fill a little at a time and pack gently all the way down.
+
+## 3. Not too tight, not too loose
 
 - Too loose → burns fast and hot
 - Too tight → hard to draw
@@ -163,154 +188,121 @@ This is the biggest factor you control. Air pockets and clumps make one part bur
 
 ## 4. Moisture
 
-Very dry blends burn fast. Damp papers or blends burn unevenly and can go out. In humid months, keep papers sealed and dry.
+Very dry blends burn fast; damp cones burn unevenly. Keep cones sealed and dry, especially in monsoon.
 
-## 5. Lighting it properly
+## 5. An even light
 
-Light the tip evenly by rotating the roll as you light, instead of holding the flame in one spot. A lopsided light is one of the main causes of "canoeing" — when one side burns ahead of the other.
+Rotate the cone while lighting so the whole top catches at once. Lighting one spot is a common cause of canoeing.
 
-## Fixing a run or canoe
+## Fixing a canoe
 
-If one side starts burning faster, gently lick or dab the fast side with a little moisture, or touch the slow side with the flame to even it out.
+If one side races ahead, touch the slow side with the flame to even it out.
 
-## The short version
-
-Good paper + even packing + a firm roll + an even light = slow burn. The paper does its part; technique does the rest.
-
-[Try Jotah slow burn papers →](/product)`,
+[Get Jotah slow burn cones →](/product)`,
   },
   {
-    slug: "how-to-store-rolling-papers",
-    title: "How to Store Rolling Papers (Especially in Indian Monsoon Humidity)",
-    description: "Humidity makes rolling papers stick, curl and burn badly. Simple ways to store rolling papers so they stay dry and fresh — even during the monsoon.",
-    updated: "2026-11-08",
+    slug: "how-to-store-pre-rolled-cones",
+    title: "How to Store Pre-Rolled Cones (Especially in Monsoon Humidity)",
+    description: "Humidity makes cones soft, wrinkled and slow to light. Simple ways to keep pre-rolled cones dry and fresh — even during the Indian monsoon.",
+    updated: "2026-11-09",
     readMins: 3,
-    body: `Rolling paper is thin, light and absorbent — which is exactly why it tastes clean. It's also why humidity is its biggest enemy. In much of India, the monsoon can ruin a pack in days if it's left lying around.
+    body: `Thin paper tastes clean because it's light and absorbent — which also makes humidity its biggest enemy. In the Indian monsoon, cones left out can go soft in days.
 
-## What humidity does to rolling papers
+## What humidity does to cones
 
-- The gum strip turns tacky, so papers stick together
-- Papers curl or crinkle
-- Damp paper burns unevenly and can go out
+- The cone softens and loses its shape
+- The paper wrinkles
+- Damp cones light badly and burn unevenly
 
-## How to store them properly
+## How to store them
 
-- **Keep the pack closed.** Don't leave it open on a table.
-- **Use a zip bag or airtight tin** during the monsoon. Even a simple zip-lock bag makes a big difference.
-- **Keep away from heat and direct sun** — no car dashboards, no window sills.
-- **Don't keep them in your back pocket** for days. Body heat and sweat add moisture.
-- **Avoid the bathroom and kitchen** — they're the most humid rooms.
+- **Keep cones in their pack until you use them.** The pack also protects the shape.
+- **Use a zip bag or an airtight tin** in monsoon months.
+- **Keep away from heat and direct sun** — no car dashboards or window sills.
+- **Don't carry them in a back pocket** — they get crushed and damp.
+- **Avoid bathrooms and kitchens**, the most humid rooms.
 
 ## Buying tip
 
-In humid months, buying smaller quantities more often keeps your papers fresh. If you buy in bulk — like a [Box of 25](/product) — keep the unopened packs sealed together in a dry place and open one at a time.
+In humid months, buying smaller quantities more often keeps them fresh. If you buy a [Box of 25](/product), keep the unopened packs sealed together in a dry place.
 
-## Already damp?
+## Already soft?
 
-Lay the papers flat somewhere dry and airy (not in direct heat) for a few hours. If the gum has already stuck sheets together, it's usually best to replace them.`,
+Let the cone sit somewhere dry and airy (not in direct heat) for a few hours before using it.`,
   },
   {
-    slug: "rolling-papers-india-buying-guide",
-    title: "Rolling Papers in India: A Simple Buying Guide (2026)",
-    description: "What to look for when buying rolling papers in India — thickness, size, burn, price and where to buy, including quick-commerce apps and paan shops.",
-    updated: "2026-11-08",
-    readMins: 5,
-    body: `There are more rolling paper options in India today than ever — imported brands, Indian brands, and everything in between. Here's what actually matters when you're choosing.
+    slug: "pre-rolled-cones-india-buying-guide",
+    title: "Pre-Rolled Cones in India: A Simple Buying Guide (2026)",
+    description: "What to look for when buying pre-rolled cones in India — paper thickness, size, tip, burn, price and where to buy, including Gurgaon delivery.",
+    updated: "2026-11-09",
+    readMins: 4,
+    body: `Pre-rolled cones are now easy to find in India — imported and Indian. Here's what actually matters when choosing.
 
-> Rolling papers are for adults (18+) only.
+> Cones are for adults (18+) only.
 
-## 1. Thickness (GSM)
+## 1. Paper thickness (GSM)
 
-Thinner papers give a cleaner taste and less ash. Look for the GSM on the pack — lower is thinner. Read more: [what GSM means](/guides/what-is-gsm-in-rolling-paper).
+Thinner paper gives a cleaner taste and less ash. Lower GSM = thinner. Read: [what 13.8 GSM means](/guides/what-does-13-8-gsm-mean).
 
 ## 2. Size
 
-Single wide, 1¼ and king size are the most common. If you're not sure, start with a mid size. See [rolling paper sizes explained](/guides/rolling-paper-sizes-explained).
+1¼ is the everyday favourite; king size is for sharing. See [cone sizes explained](/guides/pre-rolled-cone-sizes-explained).
 
-## 3. Burn
+## 3. The tip
 
-A good paper burns slowly and evenly when rolled well. "Slow burn" on the pack is a good sign, but technique matters too — see [what makes a paper burn evenly](/guides/slow-burn-rolling-papers).
+A firm tip keeps the cone's shape, gives a clean draw and makes it easier to hold.
 
-## 4. Gum strip
+## 4. Burn
 
-The gum should hold the seal without needing much moisture, and shouldn't overpower the taste.
+"Slow burn" on the pack is a good sign, but packing matters too — see [what makes a cone burn evenly](/guides/slow-burn-cones).
 
 ## 5. Price
 
-Imported papers often carry an import mark-up. Indian brands can offer the same quality at a lower price. Jotah, for example, has an MRP of ₹15 per pack, inclusive of all taxes.
+Imported cones often carry an import mark-up. Jotah cones are ₹15 each, inclusive of all taxes.
 
-## 6. Freshness and storage
+## 6. Freshness
 
-Papers kept open in humid shops can go stale. Buy from places with good turnover, and store them properly at home — see [how to store rolling papers](/guides/how-to-store-rolling-papers).
+Cones kept open in humid shops can go soft. Buy where stock moves fast, and store them dry at home — see [how to store cones](/guides/how-to-store-pre-rolled-cones).
 
-## Where to buy rolling papers in India
+## Where to buy cones in India
 
-- **Paan and tobacco shops** — the most common place, especially in big cities.
-- **Quick-commerce apps** — some apps list rolling papers in some cities; search the brand name.
-- **Directly from the brand** — many brands, including Jotah, sell online. [Order Jotah here](/product).
+- **Paan and tobacco shops** in big cities
+- **Quick-commerce apps** in some cities — search the brand name
+- **Directly from the brand** — [order Jotah cones online](/product)
 
-## Why choose an Indian brand?
+## Why an Indian brand?
 
-Buying Indian supports local businesses and usually means better prices and fresher stock. Jotah is marketed and packed by Jotah Pvt. Ltd. in Gurugram.`,
+Better prices, fresher stock, and you support a local business. Jotah is marketed and packed by Jotah Pvt. Ltd. in Gurugram.`,
   },
   {
-    slug: "where-to-buy-rolling-papers-gurgaon",
-    title: "Where to Buy Rolling Papers in Gurgaon (Gurugram)",
-    description: "Looking for rolling papers in Gurgaon? Where to find Jotah and other rolling papers in Gurugram — paan shops, online delivery and bulk orders.",
-    updated: "2026-11-08",
+    slug: "where-to-buy-pre-rolled-cones-gurgaon",
+    title: "Where to Buy Pre-Rolled Cones in Gurgaon (Gurugram)",
+    description: "Looking for pre-rolled cones in Gurgaon? Where to find Jotah cones in Gurugram — paan shops, online delivery, WhatsApp orders and bulk for shops.",
+    updated: "2026-11-09",
     readMins: 3,
-    body: `Jotah is packed in Gurugram, and Gurgaon is where you'll find us most easily. Here are the quickest ways to get rolling papers in the city.
+    body: `Jotah is packed in Gurugram, and Gurgaon is where you'll find us most easily.
 
-> 18+ only. Rolling papers are not for sale to minors.
+> 18+ only. Not for sale to minors.
 
 ## 1. Paan and tobacco shops
 
-Jotah is stocked in paan and tobacco shops across Gurgaon. If you don't see it on the counter, just ask for **Jotah** by name — many shops keep papers behind the counter.
+Jotah cones are stocked in paan and tobacco shops across Gurgaon. If you don't see them on the counter, just ask for **Jotah** by name.
 
-## 2. Order online, delivered in Gurgaon
+## 2. Order online
 
-You can [order Jotah directly on our website](/product) — single packs, 5-Packs, 10-Packs or a Box of 25. Pay by cash or UPI on delivery.
+[Order Jotah cones on our website](/product) — a single cone, 5-Pack, 10-Pack or Box of 25. Pay by cash or UPI on delivery.
 
 ## 3. Order on WhatsApp
 
 Message **"What The Fun"** to **+91 92056 17375** on WhatsApp and we'll help you order.
 
-## For shop owners in Gurgaon
+## For shop owners
 
 Want to stock Jotah in your shop? We supply retailers across Gurugram. WhatsApp us at +91 92056 17375 for retailer pricing.
 
 ## Outside Gurgaon?
 
-We're working on reaching more of Delhi NCR. Meanwhile you can [order online](/product), or message us on WhatsApp to check delivery to your area.`,
-  },
-  {
-    slug: "rolling-paper-glossary",
-    title: "Rolling Paper Glossary: Terms Every Roller Should Know",
-    description: "GSM, tips, roach, canoeing, king size slim, gum strip and more — a simple A–Z glossary of rolling paper terms.",
-    updated: "2026-11-08",
-    readMins: 3,
-    body: `New to rolling? Here are the words you'll hear most, explained simply.
-
-## A–Z
-
-- **1¼ (one and a quarter)** — a popular mid-size paper, a little longer than single wide.
-- **Booklet** — the small folded pack that holds the papers.
-- **Canoeing** — when one side of a roll burns faster than the other, leaving a "canoe" shape.
-- **Crutch / tip / roach** — a small piece of firm card rolled into the mouth end for structure and grip.
-- **Gum strip** — the thin line of natural adhesive along one edge used to seal the roll.
-- **GSM** — grams per square metre; how heavy (and thick) the paper is. Lower = thinner. [Read more](/guides/what-is-gsm-in-rolling-paper).
-- **King size** — long papers, around 105–110 mm.
-- **King size slim** — king size but narrower, for a more even burn.
-- **Run** — when the burn shoots up one side of the roll.
-- **Single wide** — the classic, shortest standard size.
-- **Slow burn** — paper designed to burn steadily rather than quickly.
-- **Tuck** — folding the non-gummed edge of the paper under the blend before rolling up.
-
-## Keep learning
-
-- [How to roll step by step](/guides/how-to-roll-with-rolling-paper)
-- [Rolling paper sizes explained](/guides/rolling-paper-sizes-explained)
-- [What makes a paper burn evenly](/guides/slow-burn-rolling-papers)`,
+We're working on reaching more of Delhi NCR. Meanwhile you can [order online](/product) or WhatsApp us to check delivery to your area.`,
   },
 ];
 

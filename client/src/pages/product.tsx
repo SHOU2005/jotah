@@ -13,10 +13,12 @@ import { SHOP_PRODUCTS } from "@shared/products";
 import { SITE_URL } from "@shared/site";
 
 const photos = [
-  { src: "/images/box-front.jpg", alt: "Front of the Jotah pack" },
+  { src: "/images/cones/hero-box-cones.jpg", alt: "Jotah pre-rolled cones with the kraft pack" },
+  { src: "/images/cones/cone-tips.jpg", alt: "Close-up of Jotah cone tips" },
+  { src: "/images/cones/box-moody.jpg", alt: "Jotah pack on dark stone" },
+  { src: "/images/cones/cone-macro.jpg", alt: "Close-up of a Jotah pre-rolled cone" },
   { src: "/images/box-specs.jpg", alt: "Side of the pack: Slow Burn, France Paper, 13.8 GSM" },
   { src: "/images/box-wtf.jpg", alt: "Top of the pack: What The Fun, scan for surprise" },
-  { src: "/images/box-back.jpg", alt: "Back of the pack: MRP ₹15, packed by Jotah Pvt. Ltd." },
 ];
 
 export default function Product() {
@@ -32,8 +34,8 @@ export default function Product() {
         <JsonLd data={{
           "@context": "https://schema.org",
           "@type": "Product",
-          name: "Jotah Rolling Papers",
-          description: "Slow burn rolling papers made from France paper at 13.8 GSM. Marketed and packed by Jotah Pvt. Ltd., Gurugram. MRP ₹15 per pack.",
+          name: "Jotah Pre-Rolled Cones",
+          description: "Pre-rolled cones made from France paper at 13.8 GSM with a slow, even burn. One cone per pack, MRP ₹15. Marketed and packed by Jotah Pvt. Ltd., Gurugram.",
           image: photos.map((p) => `${SITE_URL}${p.src}`),
           brand: { "@type": "Brand", name: "Jotah" },
           countryOfOrigin: "IN",
@@ -52,7 +54,7 @@ export default function Product() {
             <div className="photo-frame">
               <img src={photos[active].src} alt={photos[active].alt} className="aspect-[16/9] w-full object-cover" />
             </div>
-            <div className="mt-4 grid grid-cols-4 gap-3">
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
               {photos.map((p, i) => (
                 <button
                   key={p.src}
@@ -68,13 +70,13 @@ export default function Product() {
 
           <div>
             <p className="eyebrow mb-4">Jotah Pvt. Ltd. · Made in India</p>
-            <h1 className="display text-[clamp(2.6rem,5vw,4.4rem)]">Jotah Rolling Papers</h1>
+            <h1 className="display text-[clamp(2.6rem,5vw,4.4rem)]">Jotah Pre-Rolled Cones</h1>
             <div className="mt-6 flex items-baseline gap-3">
               <span key={size.id} className="animate-badge-pop font-display text-5xl font-black tabular-nums">₹{size.price}</span>
-              <span className="text-sm text-ink-soft">{size.packs > 1 ? `${size.packs} packs × ₹15 MRP` : "MRP per pack"} · inclusive of all taxes</span>
+              <span className="text-sm text-ink-soft">{size.packs > 1 ? `${size.packs} cones × ₹15 MRP` : "MRP per cone"} · inclusive of all taxes</span>
             </div>
             <p className="mt-6 text-lg leading-relaxed text-ink-soft">
-              Fine French paper cut ultra-thin at 13.8 GSM. It burns slow and even, tastes of nothing, and costs less than your chai.
+              Ready-made cones of fine French paper, ultra-thin at 13.8 GSM. No rolling needed — just fill, twist and enjoy a slow, even burn. Costs less than your chai.
             </p>
 
             <ul className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -99,10 +101,12 @@ export default function Product() {
 
             <dl className="mt-10 divide-y divide-[color:var(--border)] border-y border-[color:var(--border)] text-sm">
               {[
+                ["Product", "Pre-rolled cone"],
+                ["In each pack", "1 cone"],
                 ["Paper", "Sourced from France"],
                 ["Weight", "13.8 GSM (ultra-thin)"],
                 ["Burn", "Slow, even"],
-                ["MRP", "₹15 inclusive of all taxes"],
+                ["MRP", "₹15 per pack (1 cone), inclusive of all taxes"],
                 ["Marketed & packed by", "Jotah Pvt. Ltd., WeWork Forum, Cybercity, Gurugram 122002"],
                 ["Age", "18+ only. Not for sale to minors."],
               ].map(([k, v]) => (
