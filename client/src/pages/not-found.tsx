@@ -1,21 +1,21 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import Navigation from "@/components/navigation";
+import { Footer } from "@/components/site-chrome";
+import { usePageMeta } from "@/lib/seo";
 
 export default function NotFound() {
+  usePageMeta("/404");
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <Navigation />
+      <main className="kraft-texture flex min-h-[80vh] items-center justify-center bg-paper px-4 pt-20 text-center">
+        <div>
+          <p className="display text-[clamp(6rem,20vw,14rem)] text-kraft">404</p>
+          <h1 className="display -mt-4 text-4xl">Lost the paper?</h1>
+          <p className="mt-4 text-ink-soft">This page went up in smoke.</p>
+          <a href="/" className="btn btn-ink mt-8">Back home</a>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }
