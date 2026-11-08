@@ -51,6 +51,12 @@ export default {
           "4": "var(--chart-4)",
           "5": "var(--chart-5)",
         },
+        paper: { DEFAULT: "#F3E9DA", 2: "#EADBC4" },
+        kraft: { DEFAULT: "#D9AE7E", deep: "#B9895A" },
+        ink: { DEFAULT: "#16120E", soft: "#4A3F35" },
+        wood: "#2A1D14",
+        flame: "#E0412F",
+        wa: "#25D366",
         sidebar: {
           DEFAULT: "var(--sidebar)",
           foreground: "var(--sidebar-foreground)",
@@ -61,19 +67,12 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
-        'saddle-brown': '#8B4513',
-        'goldenrod': '#DAA520',
-        'warm-cream': '#F5E6D3',
-        'dark-brown': '#2F1B14',
-        'peru-gold': '#CD853F',
-        'cornsilk': '#FFF8DC'
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
-        'playfair': ['Playfair Display', 'serif'],
-        'inter': ['Inter', 'sans-serif']
+        display: ["var(--font-display)"],
       },
       keyframes: {
         "accordion-down": {

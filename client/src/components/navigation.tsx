@@ -1,94 +1,84 @@
-import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import jotahLogo from "@assets/jotah-logo.jpeg";
+import { Wordmark, WhatsAppIcon } from "./brand";
+import { WHATSAPP_URL } from "@/lib/contact";
+import { CartButton } from "./cart";
 
-export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [location] = useLocation();
+const links = [
+  { href: "/#shop", label: "Shop" },
+  { href: "/#pack", label: "The Pack" },
+  { href: "/guides", label: "Guides" },
+  { href: "/what-the-fun", label: "What The Fun" },
+  { href: "/#buy", label: "Buy" },
+  { href: "/#contact", label: "Contact" },
+];
 
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
-    { href: "/testimonials", label: "Reviews" },
-    { href: "/what-the-fun", label: "What the Fun" },
-    { href: "/#contact", label: "Contact" }
-  ];
+export default function Navigation({ solid = false }: { solid?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-goldenrod/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <img 
-              src={jotahLogo} 
-              alt="Jotah Logo" 
-              className="h-12 w-12 rounded-full object-cover border-2 border-goldenrod/50 group-hover:border-goldenrod transition-colors"
-            />
-            <span className="text-2xl font-playfair font-bold bg-gradient-to-r from-goldenrod to-yellow-400 bg-clip-text text-transparent">
-              JOTAH
-            </span>
-          </Link>
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled || open || solid ? "bg-paper/90 shadow-[0_1px_0_rgba(22,18,14,.12)] backdrop-blur-md" : "bg-transparent"
+      }`}
+    >
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 md:h-20">
+        <Link href="/" className="text-ink" aria-label="Jotah home" onClick={() => setOpen(false)}>
+          <Wordmark />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.href}
-                href={link.href}
-                className={`text-white hover:text-goldenrod transition-colors font-medium ${
-                  location === link.href ? 'text-goldenrod' : ''
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Button 
-              className="bg-gradient-to-r from-goldenrod to-yellow-400 hover:from-yellow-400 hover:to-goldenrod text-black px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105"
-              data-testid="button-order-now"
-            >
-              Order Now
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white hover:text-goldenrod transition-colors"
-            data-testid="button-mobile-menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+        <div className="hidden items-center gap-8 md:flex">
+          {links.map((l) => (
+            <a key={l.href} href={l.href} className="text-sm font-medium text-ink-soft transition-colors hover:text-ink">
+              {l.label}
+            </a>
+          ))}
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-ink !px-5 !py-2.5 text-sm" data-testid="nav-whatsapp">
+            <WhatsAppIcon className="h-4 w-4" /> Chat with us
+          </a>
+          <CartButton className="-ml-3" />
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-black/95 backdrop-blur-sm border-t border-goldenrod/20">
-            <div className="px-4 py-6 space-y-4">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.href}
-                  href={link.href}
-                  className={`block text-white hover:text-goldenrod transition-colors font-medium ${
-                    location === link.href ? 'text-goldenrod' : ''
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Button 
-                className="w-full bg-gradient-to-r from-goldenrod to-yellow-400 hover:from-yellow-400 hover:to-goldenrod text-black py-3 rounded-full font-bold transition-all mt-4"
-                data-testid="button-mobile-order-now"
-              >
-                Order Now
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+        <div className="flex items-center gap-1 md:hidden">
+        <CartButton />
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="rounded-full p-2 text-ink"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          data-testid="button-mobile-menu"
+        >
+          {open ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        </div>
+      </nav>
+
+      {open && (
+        <div className="border-t border-[color:var(--border)] px-4 pb-6 pt-2 md:hidden">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="animate-slide-in block border-b border-[color:var(--border)] py-4 font-display text-2xl font-extrabold"
+            >
+              {l.label}
+            </a>
+          ))}
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa mt-6 w-full">
+            <WhatsAppIcon /> WhatsApp “What The Fun”
+          </a>
+        </div>
+      )}
+    </header>
   );
 }

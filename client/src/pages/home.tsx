@@ -1,21 +1,37 @@
 import Navigation from "@/components/navigation";
-import HeroSection from "@/components/hero-section";
-import RollingPaperShowcase from "@/components/rolling-paper-showcase";
-import BrandStory from "@/components/brand-story";
-import FindProducts from "@/components/find-products";
-import ContactSection from "@/components/contact-section";
-import Footer from "@/components/footer";
+import { Contact, Faq, GuidesTeaser, Hero, Marquee, PackGallery, Shop, Specs, Story, WhereToBuy, WtfBand } from "@/components/home-sections";
+import { Footer } from "@/components/site-chrome";
+import { usePageMeta } from "@/lib/seo";
+import { TornEdge } from "@/components/brand";
+
+const KRAFT = "#D9AE7E";
+const INK = "#16120E";
 
 export default function Home() {
+  usePageMeta("/");
   return (
-    <div className="bg-black">
+    <>
       <Navigation />
-      <HeroSection />
-      <RollingPaperShowcase />
-      <BrandStory />
-      <FindProducts />
-      <ContactSection />
+      <main>
+        <Hero />
+        <Marquee />
+        <Story />
+        <TornEdge fill={KRAFT} bg="bg-paper" />
+        <Specs />
+        <TornEdge fill={KRAFT} bg="bg-paper-2" flip />
+        <Shop />
+        <PackGallery />
+        <TornEdge fill={INK} bg="bg-paper" />
+        <WtfBand />
+        <TornEdge fill={INK} bg="bg-paper-2" flip />
+        <WhereToBuy />
+        <GuidesTeaser />
+        <Faq />
+        <TornEdge fill={KRAFT} bg="bg-paper" />
+        <Contact />
+        <TornEdge fill={KRAFT} bg="bg-ink" flip />
+      </main>
       <Footer />
-    </div>
+    </>
   );
 }
