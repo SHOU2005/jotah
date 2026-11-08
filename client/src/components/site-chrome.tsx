@@ -93,7 +93,7 @@ export function Footer() {
           <div>
             <Wordmark className="text-paper" />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-paper/70">
-              India's own rolling paper. Slow burn, France paper, 13.8 GSM — packed in Gurugram.
+              India's own pre-rolled cones. Slow burn, France paper, 13.8 GSM — packed in Gurugram.
             </p>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa mt-6">
               <WhatsAppIcon /> What The Fun?
@@ -105,7 +105,8 @@ export function Footer() {
               <li><a className="hover:text-kraft" href="/#pack">The Pack</a></li>
               <li><a className="hover:text-kraft" href="/#shop">Shop</a></li>
               <li><a className="hover:text-kraft" href="/product">Product details</a></li>
-              <li><a className="hover:text-kraft" href="/guides">Rolling paper guides</a></li>
+              <li><a className="hover:text-kraft" href="/guides">Cone guides</a></li>
+              <li><a className="hover:text-kraft" href="/game">Play: Stack the Packs</a></li>
               <li><a className="hover:text-kraft" href="/what-the-fun">What The Fun</a></li>
               <li><a className="hover:text-kraft" href="/#buy">Where to buy</a></li>
             </ul>

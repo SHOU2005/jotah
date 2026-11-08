@@ -26,16 +26,16 @@ export function Hero() {
           </p>
           <h1 className="hero-in display text-[clamp(3rem,7vw,6.25rem)] text-ink" style={{ animationDelay: "120ms" }}>
             India's own<br />
-            rolling <span className="relative inline-block">
-              paper.
+            pre-rolled <span className="relative inline-block">
+              cone.
               <svg aria-hidden viewBox="0 0 300 20" className="absolute -bottom-2 left-0 w-full" preserveAspectRatio="none">
                 <path className="draw-line" d="M2 14 C 80 4, 200 4, 298 12" stroke="var(--flame)" strokeWidth="6" fill="none" strokeLinecap="round" />
               </svg>
             </span>
           </h1>
           <p className="hero-in mt-8 max-w-xl text-lg leading-relaxed text-ink-soft md:text-xl" style={{ animationDelay: "260ms" }}>
-            Ultra-thin <strong className="text-ink">13.8 GSM</strong> paper from <strong className="text-ink">France</strong>.
-            A slow, even burn. Packed in Gurugram for people who roll right.
+            Ready-made cones of ultra-thin <strong className="text-ink">13.8 GSM</strong> paper from <strong className="text-ink">France</strong>.
+            No rolling, no mess — just a slow, even burn. Packed in Gurugram.
           </p>
           <div className="hero-in mt-10 flex flex-col gap-3 sm:flex-row" style={{ animationDelay: "380ms" }}>
             <button onClick={buyNow} className="btn btn-ink group text-base" data-testid="hero-buy">
@@ -49,7 +49,7 @@ export function Hero() {
             {[
               ["13.8", "GSM thin"],
               ["FR", "France paper"],
-              ["₹15", "Per pack"],
+              ["₹15", "Per cone"],
             ].map(([v, l]) => (
               <div key={l}>
                 <dt className="sr-only">{l}</dt>
@@ -75,7 +75,7 @@ export function Hero() {
 
 /* ───────────────────────── MARQUEE ───────────────────────── */
 export function Marquee() {
-  const items = ["Slow burn", "France paper", "13.8 GSM", "Made in India", "What The Fun", "₹15 a pack"];
+  const items = ["Slow burn", "France paper", "13.8 GSM", "Made in India", "What The Fun", "No rolling needed", "₹15 a cone"];
   const strip = (cls: string, dir: "" | "marquee-reverse", star: string) => (
     <div className={`marquee-track ${dir} flex w-max gap-10 whitespace-nowrap py-4`}>
       {[...items, ...items, ...items, ...items].map((t, i) => (
@@ -101,15 +101,15 @@ export function Story() {
         <Reveal>
           <p className="eyebrow mb-8">Our story</p>
           <p className="max-w-5xl font-display text-[clamp(1.9rem,4.2vw,3.6rem)] font-extrabold leading-[1.08] tracking-tight" style={{ fontStretch: "108%" }}>
-            Every great session starts with the paper. For too long, ours came from somewhere else.{" "}
-            <span className="text-ink-soft/60">So we built Jotah — a rolling paper made for India, priced for India, and proud of it.</span>
+            Every great session starts with the paper. For too long, ours came from somewhere else — and rolling it yourself was half the work.{" "}
+            <span className="text-ink-soft/60">So we built Jotah — pre-rolled cones made for India, priced for India, and proud of it.</span>
           </p>
         </Reveal>
         <div className="mt-20 grid gap-px overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--border)] md:grid-cols-3">
           {[
-            ["01", "Paper first", "We source fine French paper at 13.8 GSM — thin enough to taste nothing but what you rolled."],
+            ["01", "Paper first", "Fine French paper at 13.8 GSM — thin enough that you taste your blend, not the paper."],
             ["02", "Burns slow", "An even, slow burn so nothing runs, nothing canoes, and the moment lasts."],
-            ["03", "Fair price", "Premium paper at ₹15 MRP, inclusive of all taxes. No import mark-up."],
+            ["03", "Fair price", "A premium cone for ₹15 MRP, inclusive of all taxes. No import mark-up."],
           ].map(([n, t, d], i) => (
             <Reveal key={n} delay={i * 120} className="bg-paper p-8 md:p-10">
               <p className="font-display text-sm font-black text-flame">{n}</p>
@@ -168,10 +168,10 @@ export function Specs() {
 /* ───────────────────────── PACK GALLERY ───────────────────────── */
 export function PackGallery() {
   const shots = [
-    { src: "/images/box-front.jpg", label: "Front", title: "The J", text: "Our mark. Simple, bold, Indian." },
-    { src: "/images/box-wtf.jpg", label: "Top", title: "What The Fun", text: "Scan the QR for a surprise." },
-    { src: "/images/box-specs.jpg", label: "Side", title: "The specs", text: "Slow burn · France · 13.8 GSM." },
-    { src: "/images/box-back.jpg", label: "Back", title: "₹15 MRP", text: "Packed by Jotah Pvt. Ltd., Gurugram." },
+    { src: "/images/cones/hero-box-cones.jpg", label: "The cone", title: "Ready to fill", text: "No rolling. Just fill, twist, light." },
+    { src: "/images/cones/cone-tips.jpg", label: "The tip", title: "Built-in tip", text: "A firm tip for a clean, easy draw." },
+    { src: "/images/box-wtf.jpg", label: "Side", title: "What The Fun", text: "Scan the QR for a surprise." },
+    { src: "/images/cones/box-moody.jpg", label: "The pack", title: "₹15 a cone", text: "One cone per pack. Packed in Gurugram." },
   ];
   return (
     <section id="pack" className="bg-paper py-24 md:py-32">
@@ -221,7 +221,7 @@ export function WtfBand() {
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa text-base" data-testid="wtf-whatsapp">
               <WhatsAppIcon /> Send “What The Fun”
             </a>
-            <a href="/what-the-fun" className="btn btn-ghost-light text-base">Learn more <ArrowRight className="h-4 w-4" /></a>
+            <Link href="/game" className="btn btn-ghost-light text-base" data-testid="wtf-game">🎮 Play Stack the Packs</Link>
           </div>
         </Reveal>
         <Reveal delay={150} className="mx-auto w-full max-w-sm">
@@ -272,7 +272,7 @@ export function WhereToBuy() {
               <h3 className="display text-4xl md:text-5xl">Order right here.</h3>
               <p className="mt-3 max-w-md text-ink/75">Add to cart, check out in 30 seconds, pay cash or UPI on delivery.</p>
             </div>
-            <div className="flex w-full flex-col gap-3 md:w-[320px]"><AddToCart withQty={false} label="Add a single · ₹15" /><a href="#shop" className="btn btn-ghost w-full">See all sizes <ArrowRight className="h-4 w-4" /></a></div>
+            <div className="flex w-full flex-col gap-3 md:w-[320px]"><AddToCart withQty={false} label="Add a cone · ₹15" /><a href="#shop" className="btn btn-ghost w-full">See all sizes <ArrowRight className="h-4 w-4" /></a></div>
           </div>
         </Reveal>
         <div className="grid gap-5 md:grid-cols-3">
@@ -341,8 +341,8 @@ export function GuidesTeaser() {
 
 /* ───────────────────────── FAQ (also feeds Google rich results) ───────────────────────── */
 export const FAQS = [
-  { q: "What are Jotah rolling papers made of?", a: "Jotah papers are made from fine paper sourced from France, at an ultra-thin 13.8 GSM, for a clean taste and slow, even burn." },
-  { q: "How much does a pack of Jotah cost?", a: "Each Jotah pack has an MRP of ₹15, inclusive of all taxes." },
+  { q: "What are Jotah cones?", a: "Jotah cones are pre-rolled cones — ready-made, so you only fill and twist, no rolling needed. They are made from fine paper sourced from France at an ultra-thin 13.8 GSM, for a clean taste and a slow, even burn." },
+  { q: "How much does Jotah cost?", a: "Each Jotah pack holds one pre-rolled cone and has an MRP of ₹15, inclusive of all taxes. You can also buy a 5-Pack (₹75), 10-Pack (₹150) or Box of 25 (₹375)." },
   { q: "Where can I buy Jotah?", a: "Search “Jotah” on Zepto, Blinkit or Swiggy Instamart, or order directly by messaging “What The Fun” to +91 92056 17375 on WhatsApp." },
   { q: "Is Jotah an Indian brand?", a: "Yes. Jotah is marketed and packed by Jotah Pvt. Ltd., WeWork Forum, Cybercity, Gurugram." },
   { q: "What is “What The Fun”?", a: "Every pack has a QR code marked “What The Fun — scan for surprise”. Scan it, or message “What The Fun” to us on WhatsApp to unlock it." },

@@ -37,14 +37,14 @@ export function GuidesIndex() {
         <JsonLd data={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "Rolling Paper Guides",
+          name: "Pre-Rolled Cone Guides",
           url: `${SITE_URL}/guides`,
           hasPart: GUIDES.map((g) => ({ "@type": "Article", headline: g.title, url: `${SITE_URL}/guides/${g.slug}` })),
         }} />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="eyebrow mb-5">Guides</p>
-          <h1 className="display max-w-4xl text-[clamp(2.6rem,6vw,5rem)]">Everything about rolling papers.</h1>
-          <p className="mt-6 max-w-2xl text-lg text-ink-soft">Simple, honest guides — how to roll, what GSM means, sizes, slow burn, storing papers in monsoon humidity and where to buy in India.</p>
+          <h1 className="display max-w-4xl text-[clamp(2.6rem,6vw,5rem)]">Everything about pre-rolled cones.</h1>
+          <p className="mt-6 max-w-2xl text-lg text-ink-soft">Simple, honest guides — how to fill a cone, cones vs papers, sizes, what GSM means, slow burn, monsoon storage and where to buy in India.</p>
           <div className="mt-14 grid gap-5 md:grid-cols-2">
             <div className="md:col-span-2"><GuideCard g={first} big /></div>
             {rest.map((g) => <GuideCard key={g.slug} g={g} />)}
@@ -78,7 +78,7 @@ export function GuideArticle({ params }: { params: { slug: string } }) {
               datePublished: g.updated,
               dateModified: g.updated,
               mainEntityOfPage: url,
-              image: `${SITE_URL}/images/box-front.jpg`,
+              image: `${SITE_URL}/images/cones/hero-box-cones.jpg`,
               author: { "@type": "Organization", name: "Jotah", url: SITE_URL },
               publisher: { "@type": "Organization", name: "Jotah", logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.svg` } },
             },
@@ -116,11 +116,11 @@ export function GuideArticle({ params }: { params: { slug: string } }) {
           <div className="mt-6"><Markdown source={g.body} /></div>
 
           <aside className="mt-16 overflow-hidden rounded-3xl bg-ink p-8 text-paper">
-            <p className="text-xs font-semibold uppercase tracking-widest text-paper/50">Jotah rolling papers</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-paper/50">Jotah pre-rolled cones</p>
             <p className="mt-3 font-display text-3xl font-black">Slow burn. France paper. 13.8 GSM.</p>
-            <p className="mt-2 text-paper/70">₹15 a pack. Delivered in Gurgaon — cash or UPI on delivery.</p>
+            <p className="mt-2 text-paper/70">₹15 a cone. Delivered in Gurgaon — cash or UPI on delivery.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <AddToCart dark withQty={false} label="Add a pack · ₹15" />
+              <AddToCart dark withQty={false} label="Add a cone · ₹15" />
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa"><WhatsAppIcon /> What The Fun?</a>
             </div>
           </aside>

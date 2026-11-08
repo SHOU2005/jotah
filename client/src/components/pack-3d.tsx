@@ -116,7 +116,7 @@ export default function Pack3D() {
       className="relative flex h-[300px] w-full cursor-grab touch-pan-y select-none items-center justify-center active:cursor-grabbing sm:h-[380px]"
       style={{ perspective: 1400 }}
       role="img"
-      aria-label="3D Jotah rolling paper pack — drag to spin"
+      aria-label="3D Jotah pre-rolled cone pack — drag to spin"
     >
       {/* floor shadow */}
       <div aria-hidden className="absolute left-1/2 top-[68%] h-10 -translate-x-1/2 rounded-[50%] bg-wood/35 blur-2xl" style={{ width: w * 0.85 }} />

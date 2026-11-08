@@ -9,7 +9,7 @@ export interface Product {
   size: string;
   short: string;
   price: number;
-  /** How many paper packs are inside (used for the pack illustration). */
+  /** How many packs are inside — each pack holds 1 cone. */
   packs: number;
   image: string;
   badge?: string;
@@ -20,42 +20,43 @@ export interface Product {
 const SPECS = "Slow burn · France paper · 13.8 GSM";
 
 export const PRODUCTS: Record<string, Product> = {
+  // Internal id kept from launch so saved carts keep working; this is the single cone pack.
   "jotah-rolling-papers": {
     id: "jotah-rolling-papers",
-    name: "Jotah Rolling Papers",
+    name: "Jotah Pre-Rolled Cone",
     size: "Single",
-    short: SPECS,
+    short: `1 cone · ${SPECS}`,
     price: 15,
     packs: 1,
-    image: "/images/box-front.jpg",
+    image: "/images/cones/hero-box-cones.jpg",
   },
   "jotah-5-pack": {
     id: "jotah-5-pack",
-    name: "Jotah 5-Pack",
+    name: "Jotah Cones 5-Pack",
     size: "5-Pack",
-    short: `5 packs · ${SPECS}`,
+    short: `5 cones · ${SPECS}`,
     price: 75,
     packs: 5,
-    image: "/images/box-front.jpg",
+    image: "/images/cones/cone-tips.jpg",
     badge: "Most popular",
   },
   "jotah-10-pack": {
     id: "jotah-10-pack",
-    name: "Jotah 10-Pack",
+    name: "Jotah Cones 10-Pack",
     size: "10-Pack",
-    short: `10 packs · ${SPECS}`,
+    short: `10 cones · ${SPECS}`,
     price: 150,
     packs: 10,
-    image: "/images/box-front.jpg",
+    image: "/images/cones/box-moody.jpg",
   },
   "jotah-box-25": {
     id: "jotah-box-25",
-    name: "Jotah Box of 25",
+    name: "Jotah Cones Box of 25",
     size: "Box of 25",
-    short: `25 packs · ${SPECS}`,
+    short: `25 cones · ${SPECS}`,
     price: 375,
     packs: 25,
-    image: "/images/box-front.jpg",
+    image: "/images/cones/box-beige.jpg",
     badge: "Stock up",
   },
   // TODO(owner): confirm what's in the combo and its price, then remove `hidden`.
@@ -63,10 +64,10 @@ export const PRODUCTS: Record<string, Product> = {
     id: "jotah-combo",
     name: "Jotah Combo",
     size: "Combo",
-    short: "Papers + tips",
+    short: "Cones + extras",
     price: 99,
     packs: 1,
-    image: "/images/box-front.jpg",
+    image: "/images/cones/hero-box-cones.jpg",
     badge: "Combo",
     hidden: true,
   },

@@ -114,8 +114,8 @@ export function CartDrawer() {
               <ShoppingBag className="h-10 w-10" />
             </div>
             <p className="font-display text-2xl font-black">Your cart is empty</p>
-            <p className="mt-2 text-ink-soft">Grab a few packs — they're just ₹{DEFAULT_PRODUCT.price} each.</p>
-            <div className="mt-8 w-full"><AddToCart withQty={false} label="Add a pack" /></div>
+            <p className="mt-2 text-ink-soft">Grab a few cones — they're just ₹{DEFAULT_PRODUCT.price} each.</p>
+            <div className="mt-8 w-full"><AddToCart withQty={false} label="Add a cone" /></div>
           </div>
         ) : (
           <>
@@ -213,7 +213,7 @@ export function ShopGrid() {
             <h3 className="font-display text-2xl font-black">{p.size}</h3>
             <p className="font-display text-2xl font-black tabular-nums">₹{p.price}</p>
           </div>
-          <p className="mt-1 text-sm text-ink-soft">{p.packs > 1 ? `${p.packs} packs · ₹${Math.round(p.price / p.packs)} each` : "One pack · MRP ₹15"}</p>
+          <p className="mt-1 text-sm text-ink-soft">{p.packs > 1 ? `${p.packs} cones · ₹${Math.round(p.price / p.packs)} each` : "1 cone · MRP ₹15"}</p>
           <button onClick={() => onAdd(p.id)} className="btn btn-ink relative mt-5 w-full overflow-hidden" data-testid={`add-${p.id}`}>
             <span className={`flex items-center gap-2 transition-all duration-300 ${justAdded === p.id ? "-translate-y-8 opacity-0" : ""}`}><ShoppingBag className="h-4 w-4" /> Add to cart</span>
             <span className={`absolute inset-0 flex items-center justify-center gap-2 transition-all duration-300 ${justAdded === p.id ? "" : "translate-y-8 opacity-0"}`}><Check className="h-4 w-4" /> Added!</span>
