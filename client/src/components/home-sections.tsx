@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ArrowRight, ArrowUpRight, Phone, Mail, MapPin, Plus, ShoppingBag } from "lucide-react";
-import { FlameIcon, FranceFlag, JMark, Reveal, ThinIcon, WhatsAppIcon, WtfWordmark } from "./brand";
+import { FlameIcon, FranceFlag, JMark, ParallaxImg, Reveal, ThinIcon, WhatsAppIcon, WtfWordmark } from "./brand";
 import Pack3D from "./pack-3d";
+import StackGame from "./stack-game";
 import { useCart } from "@/lib/cart";
 import { AddToCart, ShopGrid } from "./cart";
 import { DEFAULT_PRODUCT } from "@shared/products";
@@ -123,6 +124,42 @@ export function Story() {
   );
 }
 
+/* ───────────────────────── LOOKBOOK ───────────────────────── */
+export function Lookbook() {
+  const tile = "group relative overflow-hidden rounded-3xl bg-wood";
+  return (
+    <section id="lookbook" className="relative overflow-hidden bg-ink py-24 text-paper md:py-32">
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-0 h-[480px] w-[480px] rounded-full bg-flame/20 blur-3xl" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <h2 className="display text-[clamp(2.8rem,7vw,6rem)]">No rolling.<br /><span className="text-kraft">Just fill, twist, light.</span></h2>
+          <p className="max-w-xs text-paper/70">Ready-made cones of ultra-thin France paper. One cone per pack, ₹15.</p>
+        </Reveal>
+        <div className="grid auto-rows-[180px] gap-4 sm:auto-rows-[220px] md:grid-cols-4">
+          <Reveal className={`${tile} md:col-span-2 md:row-span-2`}>
+            <ParallaxImg src="/images/cones/box-moody.jpg" alt="Jotah pack on dark stone" />
+            <span className="absolute bottom-5 left-5 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold uppercase tracking-widest backdrop-blur">The pack</span>
+          </Reveal>
+          <Reveal delay={80} className={`${tile} md:col-span-2`}>
+            <ParallaxImg src="/images/cones/cone-tips.jpg" alt="Jotah cone tips close-up" strength={30} />
+            <span className="absolute bottom-5 left-5 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold uppercase tracking-widest backdrop-blur">The tip</span>
+          </Reveal>
+          <Reveal delay={160} className={tile}>
+            <ParallaxImg src="/images/cones/cone-end.jpg" alt="Open end of a Jotah cone" strength={24} />
+          </Reveal>
+          <Reveal delay={240} className="relative flex items-center justify-center overflow-hidden rounded-3xl bg-flame p-6 text-center">
+            <div>
+              <p className="font-display text-6xl font-black leading-none">₹15</p>
+              <p className="mt-2 text-sm font-semibold uppercase tracking-widest text-white/80">per cone</p>
+              <a href="#shop" className="mt-4 inline-flex items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-bold text-ink transition hover:scale-105">Shop now <ArrowRight className="h-4 w-4" /></a>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ───────────────────────── SPECS ───────────────────────── */
 export function Specs() {
   const specs = [
@@ -157,7 +194,7 @@ export function Specs() {
         </div>
         <Reveal className="mt-10">
           <div className="photo-frame">
-            <img src="/images/box-specs.jpg" alt="Side of the Jotah pack: Slow Burn, France Paper, 13.8 GSM" className="aspect-[8/3] w-full object-cover" loading="lazy" width={960} height={360} />
+            <img src="/images/cones/box-specs-new.jpg" alt="Side of the Jotah pack: Slow Burn, France Paper, 13.8 GSM" className="aspect-[754/172] w-full object-cover" loading="lazy" width={754} height={172} />
           </div>
         </Reveal>
       </div>
@@ -170,7 +207,7 @@ export function PackGallery() {
   const shots = [
     { src: "/images/cones/hero-box-cones.jpg", label: "The cone", title: "Ready to fill", text: "No rolling. Just fill, twist, light." },
     { src: "/images/cones/cone-tips.jpg", label: "The tip", title: "Built-in tip", text: "A firm tip for a clean, easy draw." },
-    { src: "/images/box-wtf.jpg", label: "Side", title: "What The Fun", text: "Scan the QR for a surprise." },
+    { src: "/images/cones/cones-stone.jpg", label: "The paper", title: "Slow burn", text: "France paper, ultra-thin 13.8 GSM." },
     { src: "/images/cones/box-moody.jpg", label: "The pack", title: "₹15 a cone", text: "One cone per pack. Packed in Gurugram." },
   ];
   return (
@@ -221,7 +258,7 @@ export function WtfBand() {
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa text-base" data-testid="wtf-whatsapp">
               <WhatsAppIcon /> Send “What The Fun”
             </a>
-            <Link href="/game" className="btn btn-ghost-light text-base" data-testid="wtf-game">🎮 Play Stack the Packs</Link>
+            <a href="#play" className="btn btn-ghost-light text-base" data-testid="wtf-game">🎮 Play the game</a>
           </div>
         </Reveal>
         <Reveal delay={150} className="mx-auto w-full max-w-sm">
@@ -250,6 +287,32 @@ export function Shop() {
           <p className="max-w-sm text-lg text-ink-soft">Same paper, every size. Cash or UPI on delivery.</p>
         </Reveal>
         <Reveal><ShopGrid /></Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── PLAY (game on the home page) ───────────────────────── */
+export function PlaySection() {
+  return (
+    <section id="play" className="relative overflow-hidden bg-ink pb-24 pt-8 text-paper md:pb-32">
+      <div aria-hidden className="pointer-events-none absolute -right-40 top-20 h-[460px] w-[460px] rounded-full bg-kraft/15 blur-3xl" />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:px-8">
+        <Reveal className="lg:max-w-lg">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-paper/50">Bored? Play.</p>
+          <h2 className="display text-[clamp(2.8rem,6vw,5.2rem)]">Stack the<br />Packs.</h2>
+          <p className="mt-6 text-lg leading-relaxed text-paper/75">
+            Our little game. Drop each Jotah pack on the last one — miss and it gets thinner.
+            Hit <strong className="text-paper">3 perfect drops</strong> in a row and it grows back. How high can you go?
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3 text-sm">
+            {["👆 Tap to drop", "🎯 Perfect = combo", "🌙 Climb into the night", "🏆 Beat your best"].map((t) => (
+              <span key={t} className="rounded-full border border-paper/15 px-4 py-2 text-paper/80">{t}</span>
+            ))}
+          </div>
+          <Link href="/game" className="mt-8 inline-flex items-center gap-2 font-semibold text-paper/80 hover:text-paper">Open full screen <ArrowUpRight className="h-4 w-4" /></Link>
+        </Reveal>
+        <Reveal delay={120}><StackGame compact /></Reveal>
       </div>
     </section>
   );
