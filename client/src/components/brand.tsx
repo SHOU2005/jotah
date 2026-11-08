@@ -157,3 +157,25 @@ export function TornEdge({ fill, bg, flip = false }: { fill: string; bg: string;
     </div>
   );
 }
+
+/** Image that drifts slightly as you scroll (respects reduced motion). */
+export function ParallaxImg({ src, alt, className = "", strength = 40 }: { src: string; alt: string; className?: string; strength?: number }) {
+  const ref = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    const img = ref.current;
+    if (!img || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = img.parentElement!.getBoundingClientRect();
+      const p = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight; // -1..1
+      img.style.transform = `translate3d(0, ${(-p * strength).toFixed(1)}px, 0) scale(1.15)`;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
+  }, [strength]);
+  return <img ref={ref} src={src} alt={alt} loading="lazy" className={`h-full w-full scale-[1.15] object-cover will-change-transform ${className}`} />;
+}

@@ -47,7 +47,7 @@ export default function WhatTheFun() {
             </ol>
             <div className="mt-14 grid items-center gap-10 md:grid-cols-[1.4fr_1fr]">
               <div className="photo-frame">
-                <img src="/images/box-wtf.jpg" alt="Top of the Jotah pack with the What The Fun QR code" className="aspect-[8/3] w-full object-cover" loading="lazy" />
+                <img src="/images/cones/box-beige.jpg" alt="The Jotah pack — look for the What The Fun QR code on the side" className="aspect-[2/1] w-full object-cover" loading="lazy" />
               </div>
               <div className="mx-auto w-full max-w-[260px] rounded-3xl bg-white p-4 shadow-xl">
                 <img src="/images/qr.jpg" alt="What The Fun QR code" className="aspect-square w-full" loading="lazy" />

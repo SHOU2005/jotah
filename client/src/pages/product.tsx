@@ -17,8 +17,8 @@ const photos = [
   { src: "/images/cones/cone-tips.jpg", alt: "Close-up of Jotah cone tips" },
   { src: "/images/cones/box-moody.jpg", alt: "Jotah pack on dark stone" },
   { src: "/images/cones/cone-macro.jpg", alt: "Close-up of a Jotah pre-rolled cone" },
-  { src: "/images/box-specs.jpg", alt: "Side of the pack: Slow Burn, France Paper, 13.8 GSM" },
-  { src: "/images/box-wtf.jpg", alt: "Top of the pack: What The Fun, scan for surprise" },
+  { src: "/images/cones/box-specs-new.jpg", alt: "Side of the pack: Slow Burn, France Paper, 13.8 GSM" },
+  { src: "/images/cones/cones-stone.jpg", alt: "Jotah pre-rolled cones on dark stone" },
 ];
 
 export default function Product() {

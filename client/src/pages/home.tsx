@@ -1,5 +1,5 @@
 import Navigation from "@/components/navigation";
-import { Contact, Faq, GuidesTeaser, Hero, Marquee, PackGallery, Shop, Specs, Story, WhereToBuy, WtfBand } from "@/components/home-sections";
+import { Contact, Faq, GuidesTeaser, Hero, Lookbook, Marquee, PackGallery, PlaySection, Shop, Specs, Story, WhereToBuy, WtfBand } from "@/components/home-sections";
 import { Footer } from "@/components/site-chrome";
 import { usePageMeta } from "@/lib/seo";
 import { TornEdge } from "@/components/brand";
@@ -16,13 +16,16 @@ export default function Home() {
         <Hero />
         <Marquee />
         <Story />
-        <TornEdge fill={KRAFT} bg="bg-paper" />
+        <TornEdge fill={INK} bg="bg-paper" />
+        <Lookbook />
+        <TornEdge fill={KRAFT} bg="bg-ink" />
         <Specs />
         <TornEdge fill={KRAFT} bg="bg-paper-2" flip />
         <Shop />
         <PackGallery />
         <TornEdge fill={INK} bg="bg-paper" />
         <WtfBand />
+        <PlaySection />
         <TornEdge fill={INK} bg="bg-paper-2" flip />
         <WhereToBuy />
         <GuidesTeaser />
