@@ -3,6 +3,9 @@ import { ArrowRight, ArrowUpRight, Phone, Mail, MapPin, Plus, ShoppingBag } from
 import { FlameIcon, FranceFlag, JMark, ParallaxImg, Reveal, ThinIcon, WhatsAppIcon, WtfWordmark } from "./brand";
 import Pack3D from "./pack-3d";
 import StackGame from "./stack-game";
+import Leaderboard from "./leaderboard";
+import { INSTAGRAM_URL, INSTAGRAM_HANDLE } from "@/lib/contact";
+import { Instagram } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { AddToCart, ShopGrid } from "./cart";
 import { DEFAULT_PRODUCT } from "@shared/products";
@@ -313,6 +316,7 @@ export function PlaySection() {
             ))}
           </div>
           <Link href="/game" className="mt-8 inline-flex items-center gap-2 font-semibold text-paper/80 hover:text-paper">Open full screen <ArrowUpRight className="h-4 w-4" /></Link>
+          <div className="mt-8 max-w-sm"><Leaderboard limit={5} /></div>
         </Reveal>
         <Reveal delay={120}><StackGame compact /></Reveal>
       </div>
@@ -396,6 +400,44 @@ export function GuidesTeaser() {
                 </div>
                 <span className="mt-6 inline-flex items-center gap-2 font-semibold">Read <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
               </Link>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── INSTAGRAM ───────────────────────── */
+const IG_POSTS = [
+  ["01-hero", "India's own pre-rolled cones"],
+  ["05-game", "Stack the Packs game"],
+  ["04-what-the-fun", "What The Fun QR surprise"],
+  ["06-price", "₹15 a cone, made in India"],
+  ["02-no-rolling", "No rolling — just fill, twist, light"],
+  ["08-how-to-fill", "How to fill a cone"],
+];
+
+export function InstagramStrip() {
+  return (
+    <section id="instagram" className="bg-paper py-24 md:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <p className="eyebrow mb-5">Instagram</p>
+            <h2 className="display text-[clamp(2.6rem,6vw,5rem)]">Follow the fun.</h2>
+          </div>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer me" className="btn btn-ink self-start md:self-auto" data-testid="ig-follow">
+            <Instagram className="h-5 w-5" /> Follow {INSTAGRAM_HANDLE}
+          </a>
+        </Reveal>
+        <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-6 md:overflow-visible md:px-0 md:pb-0">
+          {IG_POSTS.map(([file, alt], i) => (
+            <Reveal key={file} delay={i * 60} className="w-[46%] shrink-0 snap-start md:w-auto">
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="group relative block overflow-hidden rounded-2xl" aria-label={`${alt} — view on Instagram`}>
+                <img src={`/images/ig/${file}.jpg`} alt={alt} loading="lazy" width={600} height={750} className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <span className="absolute inset-0 flex items-center justify-center bg-ink/0 text-paper opacity-0 transition group-hover:bg-ink/40 group-hover:opacity-100"><Instagram className="h-8 w-8" /></span>
+              </a>
             </Reveal>
           ))}
         </div>

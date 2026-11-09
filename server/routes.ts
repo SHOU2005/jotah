@@ -6,11 +6,26 @@ import { z } from "zod";
 import { buildOrder, orderWhatsAppText } from "@shared/products";
 import { robotsTxt, sitemapXml } from "@shared/site";
 import { hasDatabase, isAdmin, listOrders, saveOrder, updateOrder } from "@shared/orders-db";
+import { addScore, cleanName, hasScoresDb, MAX_SCORE, topScores, weekKey } from "@shared/scores-db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // SEO: robots.txt and sitemap.xml
   app.get("/robots.txt", (_req, res) => { res.type("text/plain").send(robotsTxt()); });
   app.get("/sitemap.xml", (_req, res) => { res.type("application/xml").send(sitemapXml()); });
+
+  // ── Game leaderboard (same logic as api/scores.ts) ──
+  app.get("/api/scores", async (_req, res) => {
+    if (!hasScoresDb()) return res.status(503).json({ message: "Leaderboard unavailable" });
+    res.json({ week: weekKey(), top: await topScores(10) });
+  });
+  app.post("/api/scores", async (req, res) => {
+    if (!hasScoresDb()) return res.status(503).json({ message: "Leaderboard unavailable" });
+    const name = cleanName(req.body?.name);
+    if (!name) return res.status(400).json({ message: "Use 2–16 letters or numbers for your name" });
+    const score = Number(req.body?.score);
+    if (!Number.isInteger(score) || score < 1 || score > MAX_SCORE) return res.status(400).json({ message: "Invalid score" });
+    res.status(201).json(await addScore(name, score));
+  });
 
   // ── Shop orders (same logic as the Vercel Functions in /api) ──
   app.post("/api/orders", async (req, res) => {

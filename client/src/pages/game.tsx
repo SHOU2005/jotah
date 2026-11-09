@@ -1,6 +1,7 @@
 import Navigation from "@/components/navigation";
 import { Footer } from "@/components/site-chrome";
 import StackGame from "@/components/stack-game";
+import Leaderboard from "@/components/leaderboard";
 import { usePageMeta } from "@/lib/seo";
 
 export default function Game() {
@@ -24,6 +25,7 @@ export default function Game() {
               <li>🌙 Climb high and the sky turns to night</li>
               <li>🏆 Beat your best line, then challenge a friend on WhatsApp</li>
             </ul>
+            <div className="mt-8"><Leaderboard /></div>
           </div>
         </div>
       </main>
