@@ -93,7 +93,7 @@ export default function Product() {
             </div>
 
             <div className="mt-6 rounded-3xl bg-ink p-6 text-paper">
-              <p className="mb-4 text-sm text-paper/60">{size.name} · Pay online, COD or UPI on delivery</p>
+              <p className="mb-4 text-sm text-paper/60">{size.name} · Pay online or cash on delivery</p>
               <AddToCart key={size.id} productId={size.id} dark label={`Add ${size.size} · ₹${size.price}`} />
               <a href={whatsappLink(`What The Fun — I want to order the Jotah ${size.size} (₹${size.price}).`)} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light mt-3 w-full" data-testid="product-order">
                 <WhatsAppIcon /> Or order on WhatsApp

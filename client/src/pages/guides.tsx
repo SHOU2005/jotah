@@ -119,7 +119,7 @@ export function GuideArticle({ params }: { params: { slug: string } }) {
           <aside className="mt-16 overflow-hidden rounded-3xl bg-ink p-8 text-paper">
             <p className="text-xs font-semibold uppercase tracking-widest text-paper/50">Jotah pre-rolled cones</p>
             <p className="mt-3 font-display text-3xl font-black">Slow burn. France paper. 13.8 GSM.</p>
-            <p className="mt-2 text-paper/70">₹15 a cone · 5-Packs from ₹{DEFAULT_PRODUCT.price}, delivered in Gurgaon — pay online, COD or UPI on delivery.</p>
+            <p className="mt-2 text-paper/70">₹15 a cone · 5-Packs from ₹{DEFAULT_PRODUCT.price}, delivered in Gurgaon — pay online or cash on delivery.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <AddToCart dark withQty={false} label={`Add 5-Pack · ₹${DEFAULT_PRODUCT.price}`} />
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa"><WhatsAppIcon /> What The Fun?</a>

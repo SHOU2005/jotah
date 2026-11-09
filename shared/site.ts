@@ -11,11 +11,11 @@ export interface PageMeta { title: string; description: string; path: string }
 const STATIC: Record<string, Omit<PageMeta, "path">> = {
   "/": {
     title: "Jotah Pre-Rolled Cones — Slow Burn, 13.8 GSM France Paper | Made in India",
-    description: "Jotah pre-rolled cones: ultra-thin 13.8 GSM France paper, slow even burn, no rolling needed. Made in India, ₹15 a cone. Order online in Gurgaon & NCR, cash or UPI on delivery.",
+    description: "Jotah pre-rolled cones: ultra-thin 13.8 GSM France paper, slow even burn, no rolling needed. Made in India, ₹15 a cone. Order online in Gurgaon & NCR, pay online or cash on delivery.",
   },
   "/product": {
     title: "Buy Jotah Pre-Rolled Cones Online — 5-Pack, 10-Pack, Box of 25",
-    description: "Buy Jotah pre-rolled cones online: slow burn, France paper, 13.8 GSM. ₹15 per cone — 5-Pack ₹71 (5% off), 10-Pack ₹135 (10% off), Box of 25 ₹319 (15% off). Pay online, COD or UPI on delivery.",
+    description: "Buy Jotah pre-rolled cones online: slow burn, France paper, 13.8 GSM. ₹15 per cone — 5-Pack ₹71 (5% off), 10-Pack ₹135 (10% off), Box of 25 ₹319 (15% off). Pay online or cash on delivery.",
   },
   "/what-the-fun": {
     title: "What The Fun — Scan for Surprise | Jotah",
@@ -23,7 +23,7 @@ const STATIC: Record<string, Omit<PageMeta, "path">> = {
   },
   "/checkout": {
     title: "Checkout | Jotah",
-    description: "Place your Jotah order — cash or UPI on delivery.",
+    description: "Place your Jotah order — pay online or cash on delivery.",
   },
   "/about": {
     title: "About Jotah — Indian Pre-Rolled Cones from Gurugram",
@@ -81,7 +81,7 @@ export function llmsTxt() {
 - Product: pre-rolled cones (ready-made; fill, twist and light — no rolling needed)
 - Paper: France paper, 13.8 GSM (ultra-thin); slow, even burn
 - Price: ₹15 per cone (MRP). Single packs are sold in shops; online orders start at a 5-Pack.
-- Where to buy: paan and tobacco shops across Gurgaon (Gurugram); online at ${SITE_URL}/product with cash or UPI on delivery in Gurgaon
+- Where to buy: paan and tobacco shops across Gurgaon (Gurugram); online at ${SITE_URL}/product, pay online or cash on delivery in Gurgaon
 - Contact: WhatsApp/phone +91 92056 17375 (message "What The Fun"), email shourya.pandey.ai@gmail.com
 - Instagram: @jotah.in — https://www.instagram.com/jotah.in/
 - Retailers and wholesale: WhatsApp +91 92056 17375

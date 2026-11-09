@@ -122,26 +122,10 @@ export async function verifyPayment(raw: unknown): Promise<Result> {
 }
 
 /**
- * POST /api/orders — orders paid on delivery by UPI (no online payment step).
- * COD and online orders go through /api/create-order instead.
+ * POST /api/orders — the old no-payment order endpoint (UPI on delivery), now retired.
+ * Every order goes through /api/create-order. Kept so stale browser tabs get a clear message.
  */
-export async function placeDeliveryOrder(raw: unknown): Promise<Result> {
-  const result = buildOrder(raw);
-  if (!result.ok) return { status: 400, body: { message: result.message } };
-  const order = result.order;
-  if (order.payment !== "upi") return { status: 400, body: { message: "Please complete the payment step for this order" } };
-
-  console.log(`NEW ORDER ${order.id}\n${orderWhatsAppText(order)}`);
-  if (hasDatabase()) {
-    try {
-      await saveOrder(order);
-    } catch (err) {
-      console.error(`DB SAVE FAILED for ${order.id}`, err);
-      // Don't lose the sale: the buyer still confirms on WhatsApp and the log above has the details.
-    }
-  } else {
-    console.warn("DATABASE_URL not set — order only logged");
-  }
-  await notifyNewOrder(order, "unpaid");
-  return { status: 201, body: order as unknown as Record<string, unknown> };
-}
+export const ORDERS_RETIRED: Result = {
+  status: 400,
+  body: { message: "UPI on delivery is no longer available. Please refresh the page and pay online or choose COD." },
+};

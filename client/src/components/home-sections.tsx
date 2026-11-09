@@ -289,7 +289,7 @@ export function Shop() {
             <p className="eyebrow mb-5">Shop</p>
             <h2 className="display text-[clamp(2.6rem,6vw,5rem)]">Pick your pack.</h2>
           </div>
-          <p className="max-w-sm text-lg text-ink-soft">Same paper, every size. Bigger packs save up to 15%. Pay online, COD or UPI on delivery.</p>
+          <p className="max-w-sm text-lg text-ink-soft">Same paper, every size. Bigger packs save up to 15%. Pay online or cash on delivery.</p>
         </Reveal>
         <Reveal><ShopGrid /></Reveal>
       </div>
@@ -339,7 +339,7 @@ export function WhereToBuy() {
             <div>
               <p className="eyebrow mb-3 !text-ink">Fastest way</p>
               <h3 className="display text-4xl md:text-5xl">Order right here.</h3>
-              <p className="mt-3 max-w-md text-ink/75">Add to cart, check out in 30 seconds, pay cash or UPI on delivery.</p>
+              <p className="mt-3 max-w-md text-ink/75">Add to cart, check out in 30 seconds, pay online or cash on delivery.</p>
             </div>
             <div className="flex w-full flex-col gap-3 md:w-[320px]"><AddToCart withQty={false} label={`Add 5-Pack · ₹${DEFAULT_PRODUCT.price}`} /><a href="#shop" className="btn btn-ghost w-full">See all sizes <ArrowRight className="h-4 w-4" /></a></div>
           </div>
