@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Banknote, CheckCircle2, Loader2, Lock, Smartphone, Truck } from "lucide-react";
+import { ArrowLeft, Banknote, CheckCircle2, CreditCard, Loader2, Lock, Smartphone, Truck } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { Footer } from "@/components/site-chrome";
 import { WhatsAppIcon } from "@/components/brand";
@@ -8,6 +8,7 @@ import { AddToCart } from "@/components/cart";
 import { useCart } from "@/lib/cart";
 import { usePageMeta } from "@/lib/seo";
 import { whatsappLink, PHONE_DISPLAY } from "@/lib/contact";
+import { createPaymentOrder, loadRazorpay, openCheckout, verifyPayment, type PaymentOrder } from "@/lib/razorpay";
 import { orderSchema, orderWhatsAppText, PAYMENT_LABEL, type Order, type OrderInput } from "@shared/products";
 
 type Customer = OrderInput["customer"];
@@ -21,6 +22,9 @@ export default function Checkout() {
   const [errors, setErrors] = useState<Partial<Record<keyof Customer | "form", string>>>({});
   const [busy, setBusy] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
+  const [paid, setPaid] = useState(false);
+  // Razorpay order for the current cart + details, reused if the buyer closes the modal and retries.
+  const pending = useRef<{ key: string; po: PaymentOrder } | null>(null);
 
   const set = (k: keyof Customer) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setC((p) => ({ ...p, [k]: e.target.value }));
@@ -41,6 +45,7 @@ export default function Checkout() {
       document.querySelector("[aria-invalid='true']")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
+    if (payment === "online") return payOnline(check.data);
     setBusy(true);
     try {
       const res = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(check.data) });
@@ -56,7 +61,39 @@ export default function Checkout() {
     }
   };
 
-  if (order) return <Success order={order} />;
+  const payOnline = async (input: OrderInput) => {
+    setBusy(true);
+    setErrors({});
+    try {
+      await loadRazorpay();
+      const key = JSON.stringify(input);
+      if (pending.current?.key !== key) pending.current = { key, po: await createPaymentOrder(input) };
+      const po = pending.current.po;
+      let failed = "";
+      let result;
+      try {
+        result = await openCheckout(po, (msg) => { failed = msg; });
+      } catch (err) {
+        if ((err as { cancelled?: boolean }).cancelled) {
+          setErrors({ form: failed ? `Payment failed: ${failed}` : "Payment cancelled. Your cart is saved — tap Pay to try again." });
+          return;
+        }
+        throw err;
+      }
+      await verifyPayment(result);
+      pending.current = null;
+      setOrder(po.order);
+      setPaid(true);
+      clear();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      setErrors({ form: err instanceof Error ? err.message : "Payment could not be completed. Please try again." });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (order) return <Success order={order} paid={paid} />;
 
   const field = (k: keyof Customer) =>
     `w-full rounded-xl border bg-paper px-4 py-3.5 text-ink placeholder:text-ink-soft/50 outline-none transition focus:ring-2 ${
@@ -124,10 +161,11 @@ export default function Checkout() {
                   <p className="mb-6 flex items-center gap-3 font-display text-xl font-black"><Lock className="h-5 w-5" /> Payment</p>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {([
+                      ["online", CreditCard, "UPI, cards, netbanking or wallets — pay now, secured by Razorpay"],
                       ["cod", Banknote, "Pay in cash when your order arrives"],
                       ["upi", Smartphone, "Pay by any UPI app on delivery"],
                     ] as const).map(([val, Icon, desc]) => (
-                      <label key={val} className={`flex cursor-pointer gap-4 rounded-2xl border-2 p-4 transition ${payment === val ? "border-ink bg-paper" : "border-ink/10 hover:border-ink/30"}`}>
+                      <label key={val} className={`flex cursor-pointer ${val === "online" ? "sm:col-span-2" : ""} gap-4 rounded-2xl border-2 p-4 transition ${payment === val ? "border-ink bg-paper" : "border-ink/10 hover:border-ink/30"}`}>
                         <input type="radio" name="payment" value={val} checked={payment === val} onChange={() => setPayment(val)} className="sr-only" />
                         <Icon className="mt-0.5 h-6 w-6 shrink-0" />
                         <span>
@@ -165,7 +203,7 @@ export default function Checkout() {
                 </dl>
                 {errors.form && <p className="mt-4 rounded-xl bg-flame/20 p-3 text-sm" role="alert">{errors.form}</p>}
                 <button type="submit" disabled={busy} className="btn btn-wa mt-6 w-full text-base disabled:opacity-70" data-testid="place-order">
-                  {busy ? <><Loader2 className="h-5 w-5 animate-spin" /> Placing order…</> : <>Place order · ₹{subtotal}</>}
+                  {busy ? <><Loader2 className="h-5 w-5 animate-spin" /> {payment === "online" ? "Processing payment…" : "Placing order…"}</> : <>{payment === "online" ? "Pay" : "Place order"} · ₹{subtotal}</>}
                 </button>
                 <p className="mt-4 text-center text-xs text-paper/50">18+ only. By ordering you confirm you are of legal age.</p>
               </aside>
@@ -178,7 +216,7 @@ export default function Checkout() {
   );
 }
 
-function Success({ order }: { order: Order }) {
+function Success({ order, paid }: { order: Order; paid: boolean }) {
   return (
     <>
       <Navigation solid />
@@ -188,7 +226,7 @@ function Success({ order }: { order: Order }) {
             <CheckCircle2 className="h-12 w-12" />
           </div>
           <p className="eyebrow mt-8 animate-rise">Order {order.id}</p>
-          <h1 className="display mt-3 animate-rise text-[clamp(2.4rem,6vw,4.2rem)] [animation-delay:80ms]">What the fun!<br />Order placed.</h1>
+          <h1 className="display mt-3 animate-rise text-[clamp(2.4rem,6vw,4.2rem)] [animation-delay:80ms]">What the fun!<br />{paid ? "Payment received." : "Order placed."}</h1>
           <p className="mx-auto mt-6 max-w-md animate-rise text-lg text-ink-soft [animation-delay:160ms]">
             One last step — tap below to send your order to us on WhatsApp so we can confirm delivery.
           </p>
@@ -206,7 +244,7 @@ function Success({ order }: { order: Order }) {
             {order.lines.map((l) => (
               <div key={l.id} className="flex justify-between py-1"><span>{l.name} × {l.qty}</span><span className="font-semibold tabular-nums">₹{l.lineTotal}</span></div>
             ))}
-            <div className="mt-3 flex justify-between border-t border-ink/10 pt-3 font-bold"><span>Total · {PAYMENT_LABEL[order.payment]}</span><span className="tabular-nums">₹{order.total}</span></div>
+            <div className="mt-3 flex justify-between border-t border-ink/10 pt-3 font-bold"><span>Total · {paid ? "Paid online" : PAYMENT_LABEL[order.payment]}</span><span className="tabular-nums">₹{order.total}</span></div>
             <p className="mt-4 text-sm text-ink-soft">Delivering to {order.customer.name}, {order.customer.address}, {order.customer.city} - {order.customer.pincode}</p>
           </div>
           <p className="mt-6 text-sm text-ink-soft">Questions? Call {PHONE_DISPLAY}</p>
