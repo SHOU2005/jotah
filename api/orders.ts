@@ -1,6 +1,5 @@
-// Vercel Function: POST /api/orders
-import { buildOrder, orderWhatsAppText } from "../shared/products.js";
-import { hasDatabase, saveOrder } from "../shared/orders-db.js";
+// Vercel Function: POST /api/orders → UPI-on-delivery orders (COD/online go via /api/create-order)
+import { placeDeliveryOrder } from "../shared/razorpay.js";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -9,21 +8,6 @@ export async function POST(request: Request) {
   } catch {
     return Response.json({ message: "Invalid request" }, { status: 400 });
   }
-  const result = buildOrder(body);
-  if (!result.ok) return Response.json({ message: result.message }, { status: 400 });
-  const order = result.order;
-
-  // Always log (backup), then save to the database.
-  console.log(`NEW ORDER ${order.id}\n${orderWhatsAppText(order)}`);
-  if (hasDatabase()) {
-    try {
-      await saveOrder(order);
-    } catch (err) {
-      console.error(`DB SAVE FAILED for ${order.id}`, err);
-      // Don't lose the sale: the buyer still confirms on WhatsApp and the log above has the details.
-    }
-  } else {
-    console.warn("DATABASE_URL not set — order only logged");
-  }
-  return Response.json(order, { status: 201 });
+  const { status, body: out } = await placeDeliveryOrder(body);
+  return Response.json(out, { status });
 }

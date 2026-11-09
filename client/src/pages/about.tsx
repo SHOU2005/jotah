@@ -21,7 +21,7 @@ const FACTS: [string, string][] = [
   ["Online packs", SHOP_PRODUCTS.map((p) => `${p.size} ₹${p.price}`).join(" · ")],
   ["Made in", "India — marketed and packed in Gurugram, Haryana"],
   ["Sold in", "Paan and tobacco shops across Gurgaon (Gurugram), and online with delivery in Gurgaon"],
-  ["Payment", "Cash or UPI on delivery"],
+  ["Payment", "Pay online (Razorpay), COD or UPI on delivery"],
   ["Age", "18+ only. Not for sale to minors."],
 ];
 

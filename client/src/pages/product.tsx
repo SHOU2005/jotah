@@ -73,6 +73,8 @@ export default function Product() {
             <h1 className="display text-[clamp(2.6rem,5vw,4.4rem)]">Jotah Pre-Rolled Cones</h1>
             <div className="mt-6 flex items-baseline gap-3">
               <span key={size.id} className="animate-badge-pop font-display text-5xl font-black tabular-nums">₹{size.price}</span>
+              {size.mrp && <span className="text-xl text-ink-soft line-through tabular-nums">₹{size.mrp}</span>}
+              {size.off && <span className="rounded-full bg-flame px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-white">{size.off}% off</span>}
               <span className="text-sm text-ink-soft">{size.packs > 1 ? `${size.packs} cones × ₹15 MRP` : "MRP per cone"} · inclusive of all taxes</span>
             </div>
             <p className="mt-6 text-lg leading-relaxed text-ink-soft">
@@ -91,7 +93,7 @@ export default function Product() {
             </div>
 
             <div className="mt-6 rounded-3xl bg-ink p-6 text-paper">
-              <p className="mb-4 text-sm text-paper/60">{size.name} · Cash or UPI on delivery</p>
+              <p className="mb-4 text-sm text-paper/60">{size.name} · Pay online, COD or UPI on delivery</p>
               <AddToCart key={size.id} productId={size.id} dark label={`Add ${size.size} · ₹${size.price}`} />
               <a href={whatsappLink(`What The Fun — I want to order the Jotah ${size.size} (₹${size.price}).`)} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light mt-3 w-full" data-testid="product-order">
                 <WhatsAppIcon /> Or order on WhatsApp

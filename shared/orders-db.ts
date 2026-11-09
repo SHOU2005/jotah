@@ -6,7 +6,8 @@ import type { Order } from "./products.js";
 
 export const ORDER_STATUSES = ["new", "confirmed", "packed", "shipped", "delivered", "cancelled"] as const;
 export type OrderStatus = (typeof ORDER_STATUSES)[number];
-export const PAYMENT_STATUSES = ["unpaid", "paid"] as const;
+// "advance" = COD order whose ₹100 advance was paid online; the rest is due on delivery.
+export const PAYMENT_STATUSES = ["unpaid", "advance", "paid"] as const;
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
 
 export interface StoredOrder extends Order {

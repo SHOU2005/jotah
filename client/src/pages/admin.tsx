@@ -9,7 +9,7 @@ const STATUSES = ["new", "confirmed", "packed", "shipped", "delivered", "cancell
 type Status = (typeof STATUSES)[number];
 interface StoredOrder extends Order {
   status: Status;
-  paymentStatus: "unpaid" | "paid";
+  paymentStatus: "unpaid" | "advance" | "paid";
   adminNote: string;
   updatedAt: string;
 }
@@ -192,7 +192,7 @@ function OrderCard({ o, onPatch }: { o: StoredOrder; onPatch: (id: string, c: Pa
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-display text-xl font-black">{o.id}</span>
             <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide ${STATUS_STYLE[o.status]}`}>{o.status}</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide ${o.paymentStatus === "paid" ? "bg-wa/20 text-[#0c5a2a]" : "bg-ink/10 text-ink-soft"}`}>{o.paymentStatus}</span>
+            <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide ${o.paymentStatus === "paid" ? "bg-wa/20 text-[#0c5a2a]" : o.paymentStatus === "advance" ? "bg-kraft/40 text-ink" : "bg-ink/10 text-ink-soft"}`}>{o.paymentStatus === "advance" ? "₹100 advance paid" : o.paymentStatus}</span>
           </div>
           <p className="mt-1 text-sm text-ink-soft">{ago(o.createdAt)} · {PAYMENT_LABEL[o.payment]}</p>
         </div>
