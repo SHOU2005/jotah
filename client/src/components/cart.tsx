@@ -114,8 +114,8 @@ export function CartDrawer() {
               <ShoppingBag className="h-10 w-10" />
             </div>
             <p className="font-display text-2xl font-black">Your cart is empty</p>
-            <p className="mt-2 text-ink-soft">Grab a few cones — they're just ₹{DEFAULT_PRODUCT.price} each.</p>
-            <div className="mt-8 w-full"><AddToCart withQty={false} label="Add a cone" /></div>
+            <p className="mt-2 text-ink-soft">Start with a {DEFAULT_PRODUCT.size} — {DEFAULT_PRODUCT.packs} cones for ₹{DEFAULT_PRODUCT.price}.</p>
+            <div className="mt-8 w-full"><AddToCart withQty={false} label={`Add ${DEFAULT_PRODUCT.size} · ₹${DEFAULT_PRODUCT.price}`} /></div>
           </div>
         ) : (
           <>
@@ -193,7 +193,7 @@ export function ShopGrid() {
     window.setTimeout(open, 350);
   };
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-5 sm:grid-cols-3">
       {SHOP_PRODUCTS.map((p) => (
         <article
           key={p.id}

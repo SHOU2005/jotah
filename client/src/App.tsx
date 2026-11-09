@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { AgeGate, WhatsAppFloat, ScrollProgress } from "@/components/site-chrome";
+import { Analytics } from "@vercel/analytics/react";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/cart";
 import Checkout from "@/pages/checkout";
@@ -42,6 +43,8 @@ export default function App() {
         <CartDrawer />
         <WhatsAppFloat />
         <AgeGate />
+        {/* Vercel Web Analytics: cookieless page views. The private admin page is never tracked. */}
+        <Analytics beforeSend={(e) => (new URL(e.url).pathname.startsWith("/admin") ? null : e)} />
       </CartProvider>
     </QueryClientProvider>
   );

@@ -40,7 +40,7 @@ export function Hero() {
           </p>
           <div className="hero-in mt-10 flex flex-col gap-3 sm:flex-row" style={{ animationDelay: "380ms" }}>
             <button onClick={buyNow} className="btn btn-ink group text-base" data-testid="hero-buy">
-              <ShoppingBag className="h-5 w-5 transition-transform group-hover:-rotate-12" /> Buy now · ₹15
+              <ShoppingBag className="h-5 w-5 transition-transform group-hover:-rotate-12" /> Buy 5-Pack · ₹75
             </button>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-wa text-base" data-testid="hero-whatsapp">
               <WhatsAppIcon /> Say “What The Fun”
@@ -335,7 +335,7 @@ export function WhereToBuy() {
               <h3 className="display text-4xl md:text-5xl">Order right here.</h3>
               <p className="mt-3 max-w-md text-ink/75">Add to cart, check out in 30 seconds, pay cash or UPI on delivery.</p>
             </div>
-            <div className="flex w-full flex-col gap-3 md:w-[320px]"><AddToCart withQty={false} label="Add a cone · ₹15" /><a href="#shop" className="btn btn-ghost w-full">See all sizes <ArrowRight className="h-4 w-4" /></a></div>
+            <div className="flex w-full flex-col gap-3 md:w-[320px]"><AddToCart withQty={false} label="Add 5-Pack · ₹75" /><a href="#shop" className="btn btn-ghost w-full">See all sizes <ArrowRight className="h-4 w-4" /></a></div>
           </div>
         </Reveal>
         <div className="grid gap-5 md:grid-cols-3">
@@ -405,7 +405,7 @@ export function GuidesTeaser() {
 /* ───────────────────────── FAQ (also feeds Google rich results) ───────────────────────── */
 export const FAQS = [
   { q: "What are Jotah cones?", a: "Jotah cones are pre-rolled cones — ready-made, so you only fill and twist, no rolling needed. They are made from fine paper sourced from France at an ultra-thin 13.8 GSM, for a clean taste and a slow, even burn." },
-  { q: "How much does Jotah cost?", a: "Each Jotah pack holds one pre-rolled cone and has an MRP of ₹15, inclusive of all taxes. You can also buy a 5-Pack (₹75), 10-Pack (₹150) or Box of 25 (₹375)." },
+  { q: "How much does Jotah cost?", a: "Each Jotah pack holds one pre-rolled cone and has an MRP of ₹15, inclusive of all taxes. Single packs are sold in shops; online you can order a 5-Pack (₹75), 10-Pack (₹150) or Box of 25 (₹375)." },
   { q: "Where can I buy Jotah?", a: "Search “Jotah” on Zepto, Blinkit or Swiggy Instamart, or order directly by messaging “What The Fun” to +91 92056 17375 on WhatsApp." },
   { q: "Is Jotah an Indian brand?", a: "Yes. Jotah is marketed and packed by Jotah Pvt. Ltd., WeWork Forum, Cybercity, Gurugram." },
   { q: "What is “What The Fun”?", a: "Every pack has a QR code marked “What The Fun — scan for surprise”. Scan it, or message “What The Fun” to us on WhatsApp to unlock it." },

@@ -20,7 +20,7 @@ export interface Product {
 const SPECS = "Slow burn · France paper · 13.8 GSM";
 
 export const PRODUCTS: Record<string, Product> = {
-  // Internal id kept from launch so saved carts keep working; this is the single cone pack.
+  // Single cone (₹15 MRP): sold in shops only, not online — hidden from the website shop.
   "jotah-rolling-papers": {
     id: "jotah-rolling-papers",
     name: "Jotah Pre-Rolled Cone",
@@ -29,6 +29,7 @@ export const PRODUCTS: Record<string, Product> = {
     price: 15,
     packs: 1,
     image: "/images/cones/hero-box-cones.jpg",
+    hidden: true,
   },
   "jotah-5-pack": {
     id: "jotah-5-pack",
@@ -76,7 +77,8 @@ export const PRODUCTS: Record<string, Product> = {
 /** Products shown in the shop, in display order. */
 export const SHOP_PRODUCTS = Object.values(PRODUCTS).filter((p) => !p.hidden);
 
-export const DEFAULT_PRODUCT = PRODUCTS["jotah-rolling-papers"];
+/** Smallest online size; used by "Buy now" and quick-add buttons. */
+export const DEFAULT_PRODUCT = PRODUCTS["jotah-5-pack"];
 export const MAX_QTY = 500;
 
 export const orderSchema = z.object({
