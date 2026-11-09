@@ -3,6 +3,8 @@ export const PHONE_E164 = "919205617375";
 export const PHONE_DISPLAY = "+91 92056 17375";
 export const PREFILL = "What The Fun";
 export const EMAIL = "shourya.pandey.ai@gmail.com";
+export const INSTAGRAM_URL = "https://www.instagram.com/jotah.in/";
+export const INSTAGRAM_HANDLE = "@jotah.in";
 export const ADDRESS = "Jotah Pvt. Ltd., WeWork Forum, Cybercity, Gurugram 122002";
 
 export function whatsappLink(text: string = PREFILL) {

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { Phone, Mail, MapPin, ShoppingBag } from "lucide-react";
+import { Phone, Mail, MapPin, ShoppingBag, Instagram } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { DEFAULT_PRODUCT } from "@shared/products";
 import { JMark, Wordmark, WhatsAppIcon } from "./brand";
-import { ADDRESS, CALL_URL, EMAIL, PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
+import { ADDRESS, CALL_URL, EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 
 /** Thin flame-coloured bar at the top showing scroll progress. */
 export function ScrollProgress() {
@@ -149,6 +149,7 @@ export function Footer() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-paper/50">Contact</p>
             <ul className="space-y-3 text-sm">
               <li><a className="flex items-center gap-2 hover:text-kraft" href={CALL_URL}><Phone className="h-4 w-4" />{PHONE_DISPLAY}</a></li>
+              <li><a className="flex items-center gap-2 hover:text-kraft" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer me"><Instagram className="h-4 w-4" />{INSTAGRAM_HANDLE}</a></li>
               <li><a className="flex items-center gap-2 hover:text-kraft" href={`mailto:${EMAIL}`}><Mail className="h-4 w-4" />{EMAIL}</a></li>
               <li className="flex items-start gap-2 text-paper/70"><MapPin className="mt-0.5 h-4 w-4 shrink-0" />{ADDRESS}</li>
             </ul>
