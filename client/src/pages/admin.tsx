@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Check, Copy, IndianRupee, Loader2, LogOut, Package, Phone, RefreshCw, Search, Truck } from "lucide-react";
+import { Check, Copy, IndianRupee, Loader2, LogOut, Package, Phone, Plus, RefreshCw, Search, Tag, Truck } from "lucide-react";
 import { JMark, WhatsAppIcon } from "@/components/brand";
-import { PAYMENT_LABEL } from "@shared/products";
+import { PAYMENT_LABEL, rupees } from "@shared/products";
 import type { Order } from "@shared/products";
+import { couponLabel, type Coupon } from "@shared/coupons";
 
 // Mirrors shared/orders-db.ts (kept here so no server code reaches the browser).
 const STATUSES = ["new", "confirmed", "packed", "shipped", "delivered", "cancelled"] as const;
@@ -46,6 +47,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<Status | "all" | "todo">("todo");
   const [q, setQ] = useState("");
+  const [view, setView] = useState<"orders" | "coupons">("orders");
 
   useEffect(() => {
     document.title = "Orders · Jotah Admin";
@@ -126,7 +128,12 @@ export default function Admin() {
     <div className="min-h-screen bg-paper-2">
       <header className="sticky top-0 z-30 border-b border-ink/10 bg-paper/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <div className="flex items-center gap-2"><JMark className="h-7 w-7" /><span className="font-display text-lg font-black">Jotah Orders</span></div>
+          <div className="flex items-center gap-2"><JMark className="h-7 w-7" /><span className="font-display text-lg font-black">Jotah Admin</span></div>
+          <nav className="flex rounded-full bg-ink/5 p-1 text-sm font-semibold">
+            {(["orders", "coupons"] as const).map((v) => (
+              <button key={v} onClick={() => setView(v)} className={`rounded-full px-4 py-1.5 capitalize transition ${view === v ? "bg-ink text-paper" : "hover:bg-ink/5"}`}>{v}</button>
+            ))}
+          </nav>
           <div className="flex items-center gap-2">
             <button onClick={() => load()} className="rounded-full p-2.5 hover:bg-ink/5" aria-label="Refresh orders"><RefreshCw className={`h-5 w-5 ${loading ? "animate-spin" : ""}`} /></button>
             <button onClick={logout} className="rounded-full p-2.5 hover:bg-ink/5" aria-label="Log out"><LogOut className="h-5 w-5" /></button>
@@ -136,6 +143,7 @@ export default function Admin() {
 
       <main className="mx-auto max-w-6xl px-4 pb-24 pt-6">
         {error && <p className="mb-4 rounded-xl bg-flame/15 p-3 text-sm" role="alert">{error}</p>}
+        {view === "coupons" ? <Coupons adminKey={key} /> : <>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {stats.map((s) => (
@@ -171,6 +179,7 @@ export default function Admin() {
             {shown.map((o) => <OrderCard key={o.id} o={o} onPatch={patch} />)}
           </ul>
         )}
+        </>}
       </main>
     </div>
   );
@@ -220,7 +229,7 @@ function OrderCard({ o, onPatch }: { o: StoredOrder; onPatch: (id: string, c: Pa
         <div>
           <ul className="space-y-1 text-sm">
             {o.lines.map((l) => (
-              <li key={l.id} className="flex justify-between"><span>{l.name} × {l.qty}</span><span className="tabular-nums">₹{l.lineTotal}</span></li>
+              <li key={l.id} className="flex justify-between"><span>{l.name}{l.qty > 1 ? ` × ${l.qty}` : ""}</span><span className="tabular-nums">{rupees(l.lineTotal)}</span></li>
             ))}
           </ul>
           <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -254,6 +263,92 @@ function OrderCard({ o, onPatch }: { o: StoredOrder; onPatch: (id: string, c: Pa
         </div>
       </div>
     </li>
+  );
+}
+
+const EMPTY_COUPON = { code: "", kind: "percent" as Coupon["kind"], value: "", minOrder: "", maxUses: "" };
+
+function Coupons({ adminKey }: { adminKey: string }) {
+  const [list, setList] = useState<Coupon[] | null>(null);
+  const [form, setForm] = useState(EMPTY_COUPON);
+  const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const call = useCallback(async (method: string, body?: unknown) => {
+    const res = await fetch("/api/admin-coupons", {
+      method,
+      headers: { "Content-Type": "application/json", "x-admin-key": adminKey },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || "Something went wrong");
+    return data;
+  }, [adminKey]);
+
+  const load = useCallback(async () => {
+    try { setList(await call("GET")); } catch (e) { setMsg(e instanceof Error ? e.message : "Could not load coupons"); }
+  }, [call]);
+  useEffect(() => { load(); }, [load]);
+
+  const create = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setMsg("");
+    try {
+      await call("POST", form);
+      setForm(EMPTY_COUPON);
+      await load();
+    } catch (err) {
+      setMsg(err instanceof Error ? err.message : "Could not create coupon");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const toggle = async (c: Coupon) => {
+    setList((l) => l?.map((x) => (x.code === c.code ? { ...x, active: !c.active } : x)) ?? l);
+    try { await call("PATCH", { code: c.code, active: !c.active }); } catch (e) { setMsg(e instanceof Error ? e.message : "Update failed"); load(); }
+  };
+
+  const input = "w-full rounded-xl border border-ink/15 bg-paper px-3 py-2.5 text-sm outline-none focus:border-ink";
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: k === "code" ? e.target.value.toUpperCase() : e.target.value }));
+
+  return (
+    <div>
+      <form onSubmit={create} className="rounded-3xl bg-paper p-5 sm:p-6">
+        <p className="mb-4 flex items-center gap-2 font-display text-xl font-black"><Plus className="h-5 w-5" /> New coupon</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <label className="block text-sm"><span className="mb-1 block font-medium">Code</span><input required value={form.code} onChange={set("code")} placeholder="JOTAH10" className={`${input} uppercase`} /></label>
+          <label className="block text-sm"><span className="mb-1 block font-medium">Type</span>
+            <select value={form.kind} onChange={set("kind")} className={input}><option value="percent">% off</option><option value="flat">₹ off</option></select>
+          </label>
+          <label className="block text-sm"><span className="mb-1 block font-medium">{form.kind === "percent" ? "Percent off" : "Rupees off"}</span><input required inputMode="numeric" value={form.value} onChange={set("value")} placeholder={form.kind === "percent" ? "10" : "20"} className={input} /></label>
+          <label className="block text-sm"><span className="mb-1 block font-medium">Min order ₹ <span className="text-ink-soft">(optional)</span></span><input inputMode="numeric" value={form.minOrder} onChange={set("minOrder")} placeholder="0" className={input} /></label>
+          <label className="block text-sm"><span className="mb-1 block font-medium">Max uses <span className="text-ink-soft">(optional)</span></span><input inputMode="numeric" value={form.maxUses} onChange={set("maxUses")} placeholder="Unlimited" className={input} /></label>
+        </div>
+        {msg && <p className="mt-3 text-sm text-flame" role="alert">{msg}</p>}
+        <button disabled={saving} className="btn btn-ink mt-4 !px-5 !py-2.5 text-sm">{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create coupon"}</button>
+      </form>
+
+      {!list ? (
+        <div className="mt-10 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-ink-soft" /></div>
+      ) : list.length === 0 ? (
+        <div className="mt-16 text-center text-ink-soft"><Tag className="mx-auto mb-3 h-10 w-10" />No coupons yet. Create one above.</div>
+      ) : (
+        <ul className="mt-6 grid gap-3 md:grid-cols-2">
+          {list.map((c) => (
+            <li key={c.code} className={`flex items-center gap-4 rounded-2xl bg-paper p-4 ${c.active ? "" : "opacity-60"}`}>
+              <Tag className="h-5 w-5 shrink-0 text-ink-soft" />
+              <div className="flex-1">
+                <p className="font-display text-lg font-black tracking-wide">{c.code}</p>
+                <p className="text-sm text-ink-soft">{couponLabel(c)} · used {c.uses}{c.maxUses !== null ? ` / ${c.maxUses}` : ""}</p>
+              </div>
+              <button onClick={() => toggle(c)} className={`btn !px-4 !py-2 text-sm ${c.active ? "btn-ghost" : "bg-wa text-[#06260f]"}`}>{c.active ? "Turn off" : "Turn on"}</button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 

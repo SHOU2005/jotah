@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { COUPON_LINE_ID, couponDiscount, type Coupon } from "./coupons.js";
 
 // Product catalogue shared by the shop UI and the order API.
 // Prices are in rupees and always re-checked on the server.
@@ -110,6 +111,7 @@ export const orderSchema = z.object({
     .array(z.object({ id: z.string(), qty: z.number().int().min(1).max(MAX_QTY) }))
     .min(1, "Your cart is empty"),
   payment: z.enum(["online", "cod"]),
+  coupon: z.string().trim().max(30).optional(),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;
@@ -152,6 +154,9 @@ export function payNow(payment: PaymentMethod, total: number) {
   return 0;
 }
 
+/** Formats rupees, with a proper minus sign for discounts: −₹20. */
+export const rupees = (n: number) => (n < 0 ? `−₹${-n}` : `₹${n}`);
+
 export const PAYMENT_LABEL: Record<PaymentMethod, string> = {
   cod: "Cash on delivery",
   upi: "UPI on delivery",
@@ -163,7 +168,7 @@ export function orderWhatsAppText(o: Order) {
     "What The Fun",
     "",
     `New order ${o.id}`,
-    ...o.lines.map((l) => `• ${l.name} × ${l.qty} = ₹${l.lineTotal}`),
+    ...o.lines.map((l) => `• ${l.name}${l.qty > 1 ? ` × ${l.qty}` : ""} = ${rupees(l.lineTotal)}`),
     `Total: ₹${o.total} (${PAYMENT_LABEL[o.payment]})`,
     ...(o.payment === "cod" ? [`Advance paid online: ₹${payNow("cod", o.total)} · Cash on delivery: ₹${o.total - payNow("cod", o.total)}`] : []),
     "",
@@ -175,8 +180,11 @@ export function orderWhatsAppText(o: Order) {
     .join("\n");
 }
 
-/** Validates raw input and builds a priced order. Prices always come from PRODUCTS. */
-export function buildOrder(raw: unknown): { ok: true; order: Order } | { ok: false; message: string } {
+/**
+ * Validates raw input and builds a priced order. Prices always come from PRODUCTS.
+ * `coupon` is the coupon looked up for the input's code (server: from the database).
+ */
+export function buildOrder(raw: unknown, coupon?: Coupon | null): { ok: true; order: Order } | { ok: false; message: string } {
   const parsed = orderSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, message: parsed.error.errors[0]?.message ?? "Invalid order" };
   const { customer, items, payment } = parsed.data;
@@ -186,9 +194,15 @@ export function buildOrder(raw: unknown): { ok: true; order: Order } | { ok: fal
     if (!product || product.hidden) return { ok: false, message: "A product in your cart is no longer available" };
     lines.push({ id: product.id, name: product.name, price: product.price, qty: item.qty, lineTotal: product.price * item.qty });
   }
+  const itemsTotal = lines.reduce((s, l) => s + l.lineTotal, 0);
   if (payment === "cod") {
-    const fee = codFee(lines.reduce((s, l) => s + l.lineTotal, 0));
+    const fee = codFee(itemsTotal);
     lines.push({ id: COD_FEE_ID, name: "COD charge", price: fee, qty: 1, lineTotal: fee });
+  }
+  if (coupon) {
+    const d = couponDiscount(coupon, itemsTotal);
+    if (!d.ok) return { ok: false, message: d.message };
+    lines.push({ id: COUPON_LINE_ID, name: `Coupon ${coupon.code}`, price: -d.discount, qty: 1, lineTotal: -d.discount });
   }
   return {
     ok: true,

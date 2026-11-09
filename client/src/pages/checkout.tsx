@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Banknote, CheckCircle2, CreditCard, Loader2, Lock, Truck } from "lucide-react";
+import { ArrowLeft, Banknote, CheckCircle2, CreditCard, Loader2, Lock, Tag, Truck, X } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { Footer } from "@/components/site-chrome";
 import { WhatsAppIcon } from "@/components/brand";
@@ -9,7 +9,8 @@ import { useCart } from "@/lib/cart";
 import { usePageMeta } from "@/lib/seo";
 import { whatsappLink, PHONE_DISPLAY } from "@/lib/contact";
 import { createPaymentOrder, loadRazorpay, openCheckout, verifyPayment, type PaymentOrder } from "@/lib/razorpay";
-import { codFee, COD_ADVANCE, orderSchema, orderWhatsAppText, PAYMENT_LABEL, payNow, type Order, type OrderInput } from "@shared/products";
+import { codFee, COD_ADVANCE, orderSchema, orderWhatsAppText, PAYMENT_LABEL, payNow, rupees, type Order, type OrderInput } from "@shared/products";
+import { couponDiscount, couponLabel, type Coupon } from "@shared/coupons";
 
 type Customer = OrderInput["customer"];
 type Paid = "paid" | "advance" | null;
@@ -24,6 +25,31 @@ export default function Checkout() {
   const [busy, setBusy] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
   const [paid, setPaid] = useState<Paid>(null);
+  const [coupon, setCoupon] = useState<Coupon | null>(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponMsg, setCouponMsg] = useState("");
+  const [checkingCoupon, setCheckingCoupon] = useState(false);
+  const couponResult = coupon ? couponDiscount(coupon, subtotal) : null;
+  const discount = couponResult?.ok ? couponResult.discount : 0;
+
+  const applyCoupon = async () => {
+    const code = couponCode.trim();
+    if (!code) return;
+    setCheckingCoupon(true);
+    setCouponMsg("");
+    try {
+      const res = await fetch("/api/coupon", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ coupon: code }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Invalid coupon code");
+      setCoupon(data);
+      setCouponCode("");
+    } catch (err) {
+      setCoupon(null);
+      setCouponMsg(err instanceof Error ? err.message : "Invalid coupon code");
+    } finally {
+      setCheckingCoupon(false);
+    }
+  };
   // Razorpay order for the current cart + details, reused if the buyer closes the modal and retries.
   const pending = useRef<{ key: string; po: PaymentOrder } | null>(null);
 
@@ -34,7 +60,7 @@ export default function Checkout() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const input = { customer: c, items: lines.map((l) => ({ id: l.id, qty: l.qty })), payment };
+    const input = { customer: c, items: lines.map((l) => ({ id: l.id, qty: l.qty })), payment, coupon: discount > 0 ? coupon?.code : undefined };
     const check = orderSchema.safeParse(input);
     if (!check.success) {
       const errs: typeof errors = {};
@@ -84,7 +110,7 @@ export default function Checkout() {
   if (order) return <Success order={order} paid={paid} />;
 
   const fee = payment === "cod" ? codFee(subtotal) : 0;
-  const total = subtotal + fee;
+  const total = subtotal + fee - discount;
   const now = payNow(payment, total);
 
   const field = (k: keyof Customer) =>
@@ -187,10 +213,39 @@ export default function Checkout() {
                     </li>
                   ))}
                 </ul>
-                <dl className="mt-6 space-y-2 border-t border-paper/15 pt-6 text-sm">
+                <div className="mt-6 border-t border-paper/15 pt-6">
+                  {coupon ? (
+                    <div className="flex items-center gap-3 rounded-xl bg-paper/10 px-4 py-3 text-sm">
+                      <Tag className="h-4 w-4 shrink-0" />
+                      <div className="flex-1">
+                        <p className="font-bold">{coupon.code}</p>
+                        <p className={couponResult?.ok ? "text-paper/60" : "text-flame"}>{couponResult?.ok ? couponLabel(coupon) : couponResult?.message}</p>
+                      </div>
+                      <button type="button" onClick={() => setCoupon(null)} className="rounded-full p-1.5 hover:bg-paper/10" aria-label="Remove coupon"><X className="h-4 w-4" /></button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        value={couponCode}
+                        onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponMsg(""); }}
+                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); applyCoupon(); } }}
+                        placeholder="Coupon code"
+                        aria-label="Coupon code"
+                        className="min-w-0 flex-1 rounded-xl border border-paper/20 bg-transparent px-4 py-3 text-sm uppercase tracking-wide text-paper placeholder:normal-case placeholder:tracking-normal placeholder:text-paper/40 outline-none focus:border-paper/60"
+                        data-testid="coupon-input"
+                      />
+                      <button type="button" onClick={applyCoupon} disabled={checkingCoupon || !couponCode.trim()} className="rounded-xl bg-paper px-4 text-sm font-bold text-ink disabled:opacity-50" data-testid="coupon-apply">
+                        {checkingCoupon ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                      </button>
+                    </div>
+                  )}
+                  {couponMsg && <p className="mt-2 text-sm text-flame" role="alert">{couponMsg}</p>}
+                </div>
+                <dl className="mt-4 space-y-2 text-sm">
                   <div className="flex justify-between"><dt className="text-paper/60">Items ({count})</dt><dd className="tabular-nums">₹{subtotal}</dd></div>
                   <div className="flex justify-between"><dt className="text-paper/60">Delivery</dt><dd>Confirmed on WhatsApp</dd></div>
                   {fee > 0 && <div className="flex justify-between"><dt className="text-paper/60">COD charge</dt><dd className="tabular-nums">₹{fee}</dd></div>}
+                  {discount > 0 && <div className="flex justify-between text-wa"><dt>Coupon {coupon?.code}</dt><dd className="tabular-nums">{rupees(-discount)}</dd></div>}
                   <div className="flex items-baseline justify-between border-t border-paper/15 pt-4"><dt className="font-bold">Total</dt><dd className="font-display text-3xl font-black tabular-nums">₹{total}</dd></div>
                   {payment === "cod" && (
                     <>
@@ -241,7 +296,7 @@ function Success({ order, paid }: { order: Order; paid: Paid }) {
 
           <div className="mt-12 animate-rise rounded-3xl bg-card p-6 text-left [animation-delay:320ms]">
             {order.lines.map((l) => (
-              <div key={l.id} className="flex justify-between py-1"><span>{l.name} × {l.qty}</span><span className="font-semibold tabular-nums">₹{l.lineTotal}</span></div>
+              <div key={l.id} className="flex justify-between py-1"><span>{l.name}{l.qty > 1 ? ` × ${l.qty}` : ""}</span><span className="font-semibold tabular-nums">{rupees(l.lineTotal)}</span></div>
             ))}
             <div className="mt-3 flex justify-between border-t border-ink/10 pt-3 font-bold"><span>Total · {paid === "paid" ? "Paid online" : paid === "advance" ? `₹${now} paid · ₹${order.total - now} cash on delivery` : PAYMENT_LABEL[order.payment]}</span><span className="tabular-nums">₹{order.total}</span></div>
             <p className="mt-4 text-sm text-ink-soft">Delivering to {order.customer.name}, {order.customer.address}, {order.customer.city} - {order.customer.pincode}</p>

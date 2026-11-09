@@ -1,4 +1,4 @@
-// Server-only: checkout handlers (Razorpay Standard Checkout + delivery orders). Used by the Vercel Functions in /api
+// Server-only: checkout handlers (Razorpay Standard Checkout). Used by the Vercel Functions in /api
 // and the local Express server. Never import this from client code — it reads
 // RAZORPAY_KEY_SECRET.
 import Razorpay from "razorpay";
@@ -6,11 +6,14 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { buildOrder, orderWhatsAppText, payNow } from "./products.js";
 import { hasDatabase, saveOrder, updateOrder } from "./orders-db.js";
 import { notifyNewOrder } from "./notify.js";
+import { lookupCoupon } from "./coupon-api.js";
+import { COUPON_LINE_ID } from "./coupons.js";
+import { recordCouponUse } from "./coupons-db.js";
 
 const MIN_AMOUNT_PAISE = 100; // Razorpay minimum: ₹1
 const CURRENCY = "INR";
 
-type Result = { status: number; body: Record<string, unknown> };
+type Result = { status: number; body: unknown };
 
 const keyId = () => process.env.RAZORPAY_KEY_ID || "";
 const keySecret = () => process.env.RAZORPAY_KEY_SECRET || "";
@@ -30,15 +33,17 @@ function rzpError(err: any, what: string): Result {
 }
 
 /**
- * POST /api/create-order — body is the same order input as /api/orders, with
- * payment "online" (pay the full total now) or "cod" (pay the COD advance now).
+ * POST /api/create-order — order input with payment "online" (pay the full total
+ * now) or "cod" (pay the COD advance now), and an optional coupon code.
  * Prices the order on the server, creates the Razorpay order (receipt = our
  * order id), saves our order as unpaid, and returns what the checkout modal needs.
  */
 export async function createPaymentOrder(raw: unknown): Promise<Result> {
   if (!hasRazorpay()) return { status: 503, body: { message: "Online payment is not set up yet" } };
 
-  const result = buildOrder(raw);
+  const found = await lookupCoupon(raw);
+  if ("error" in found) return found.error;
+  const result = buildOrder(raw, found.coupon);
   if (!result.ok) return { status: 400, body: { message: result.message } };
   const order = result.order;
   if (order.payment !== "online" && order.payment !== "cod") {
@@ -111,7 +116,11 @@ export async function verifyPayment(raw: unknown): Promise<Result> {
   if (receipt && hasDatabase()) {
     try {
       const updated = await updateOrder(receipt, { paymentStatus: paid });
-      if (updated) await notifyNewOrder(updated, paid, paymentId);
+      if (updated) {
+        const couponLine = updated.lines.find((l) => l.id === COUPON_LINE_ID);
+        if (couponLine) await recordCouponUse(couponLine.name.replace(/^Coupon /, "")).catch((e) => console.error("COUPON USE NOT RECORDED", e));
+        await notifyNewOrder(updated, paid, paymentId);
+      }
     } catch (err) {
       console.error(`DB PAID UPDATE FAILED for ${receipt}`, err);
     }
