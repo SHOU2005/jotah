@@ -6,7 +6,7 @@ import { z } from "zod";
 import { robotsTxt, sitemapXml } from "@shared/site";
 import { hasDatabase, isAdmin, listOrders, updateOrder } from "@shared/orders-db";
 import { addScore, cleanName, hasScoresDb, MAX_SCORE, topScores, weekKey } from "@shared/scores-db";
-import { createPaymentOrder, placeDeliveryOrder, verifyPayment } from "@shared/razorpay";
+import { createPaymentOrder, ORDERS_RETIRED, verifyPayment } from "@shared/razorpay";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // SEO: robots.txt and sitemap.xml
@@ -28,9 +28,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ── Shop orders (same logic as the Vercel Functions in /api) ──
-  app.post("/api/orders", async (req, res) => {
-    const { status, body } = await placeDeliveryOrder(req.body);
-    res.status(status).json(body);
+  app.post("/api/orders", (_req, res) => {
+    res.status(ORDERS_RETIRED.status).json(ORDERS_RETIRED.body);
   });
 
   // ── Razorpay online payment (same logic as api/create-order.ts, api/verify-payment.ts) ──

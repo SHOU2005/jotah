@@ -109,7 +109,7 @@ export const orderSchema = z.object({
   items: z
     .array(z.object({ id: z.string(), qty: z.number().int().min(1).max(MAX_QTY) }))
     .min(1, "Your cart is empty"),
-  payment: z.enum(["online", "cod", "upi"]),
+  payment: z.enum(["online", "cod"]),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;
@@ -131,7 +131,8 @@ export interface Order {
   total: number;
 }
 
-export type PaymentMethod = OrderInput["payment"];
+/** "upi" (UPI on delivery) only exists on older orders. */
+export type PaymentMethod = OrderInput["payment"] | "upi";
 
 /** COD orders must pay this much online up front to confirm; the rest is cash on delivery. */
 export const COD_ADVANCE = 100;
@@ -144,7 +145,7 @@ export function codFee(itemsTotal: number) {
 }
 export const COD_FEE_ID = "cod-fee";
 
-/** How much the buyer pays online now: full total, the COD advance, or nothing (UPI on delivery). */
+/** How much the buyer pays online now: the full total, or the COD advance. */
 export function payNow(payment: PaymentMethod, total: number) {
   if (payment === "online") return total;
   if (payment === "cod") return Math.min(COD_ADVANCE, total);

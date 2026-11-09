@@ -1,13 +1,6 @@
-// Vercel Function: POST /api/orders → UPI-on-delivery orders (COD/online go via /api/create-order)
-import { placeDeliveryOrder } from "../shared/razorpay.js";
+// Vercel Function: POST /api/orders — retired (UPI on delivery removed); orders go via /api/create-order
+import { ORDERS_RETIRED } from "../shared/razorpay.js";
 
-export async function POST(request: Request) {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return Response.json({ message: "Invalid request" }, { status: 400 });
-  }
-  const { status, body: out } = await placeDeliveryOrder(body);
-  return Response.json(out, { status });
+export async function POST() {
+  return Response.json(ORDERS_RETIRED.body, { status: ORDERS_RETIRED.status });
 }

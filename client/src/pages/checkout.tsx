@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Banknote, CheckCircle2, CreditCard, Loader2, Lock, Smartphone, Truck } from "lucide-react";
+import { ArrowLeft, Banknote, CheckCircle2, CreditCard, Loader2, Lock, Truck } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { Footer } from "@/components/site-chrome";
 import { WhatsAppIcon } from "@/components/brand";
@@ -46,20 +46,7 @@ export default function Checkout() {
       document.querySelector("[aria-invalid='true']")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    if (payment !== "upi") return payOnline(check.data);
-    setBusy(true);
-    try {
-      const res = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(check.data) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Could not place order");
-      setOrder(data);
-      clear();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : "Could not place order. Please try again." });
-    } finally {
-      setBusy(false);
-    }
+    return payOnline(check.data);
   };
 
   const payOnline = async (input: OrderInput) => {
@@ -168,9 +155,8 @@ export default function Checkout() {
                     {([
                       ["online", CreditCard, "UPI, cards, netbanking or wallets — pay now, secured by Razorpay"],
                       ["cod", Banknote, `Pay ₹${COD_ADVANCE} now to confirm, rest in cash on delivery. COD charge ₹${codFee(subtotal)}.`],
-                      ["upi", Smartphone, "Pay by any UPI app on delivery"],
                     ] as const).map(([val, Icon, desc]) => (
-                      <label key={val} className={`flex cursor-pointer ${val === "online" ? "sm:col-span-2" : ""} gap-4 rounded-2xl border-2 p-4 transition ${payment === val ? "border-ink bg-paper" : "border-ink/10 hover:border-ink/30"}`}>
+                      <label key={val} className={`flex cursor-pointer gap-4 rounded-2xl border-2 p-4 transition ${payment === val ? "border-ink bg-paper" : "border-ink/10 hover:border-ink/30"}`}>
                         <input type="radio" name="payment" value={val} checked={payment === val} onChange={() => setPayment(val)} className="sr-only" />
                         <Icon className="mt-0.5 h-6 w-6 shrink-0" />
                         <span>
@@ -215,7 +201,7 @@ export default function Checkout() {
                 </dl>
                 {errors.form && <p className="mt-4 rounded-xl bg-flame/20 p-3 text-sm" role="alert">{errors.form}</p>}
                 <button type="submit" disabled={busy} className="btn btn-wa mt-6 w-full text-base disabled:opacity-70" data-testid="place-order">
-                  {busy ? <><Loader2 className="h-5 w-5 animate-spin" /> {payment === "upi" ? "Placing order…" : "Processing payment…"}</> : payment === "cod" ? <>Pay ₹{now} advance</> : <>{payment === "online" ? "Pay" : "Place order"} · ₹{total}</>}
+                  {busy ? <><Loader2 className="h-5 w-5 animate-spin" /> Processing payment…</> : payment === "cod" ? <>Pay ₹{now} advance</> : <>Pay · ₹{total}</>}
                 </button>
                 <p className="mt-4 text-center text-xs text-paper/50">18+ only. By ordering you confirm you are of legal age.</p>
               </aside>
