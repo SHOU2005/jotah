@@ -7,6 +7,7 @@ import { robotsTxt, sitemapXml } from "@shared/site";
 import { hasDatabase, isAdmin, listOrders, updateOrder } from "@shared/orders-db";
 import { addScore, cleanName, hasScoresDb, MAX_SCORE, topScores, weekKey } from "@shared/scores-db";
 import { createPaymentOrder, ORDERS_RETIRED, verifyPayment } from "@shared/razorpay";
+import { adminCoupons, checkCoupon } from "@shared/coupon-api";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // SEO: robots.txt and sitemap.xml
@@ -40,6 +41,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/verify-payment", async (req, res) => {
     const { status, body } = await verifyPayment(req.body);
     res.status(status).json(body);
+  });
+
+  // ── Coupons (same logic as api/coupon.ts, api/admin-coupons.ts) ──
+  app.post("/api/coupon", async (req, res) => {
+    const { status, body } = await checkCoupon(req.body);
+    res.status(status).set("cache-control", "no-store").json(body);
+  });
+  app.all("/api/admin-coupons", async (req, res) => {
+    const { status, body } = await adminCoupons(req.method, req.get("x-admin-key"), req.body);
+    res.status(status).set("cache-control", "no-store").json(body);
   });
 
   app.get("/api/admin", async (req, res) => {
