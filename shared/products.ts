@@ -93,7 +93,7 @@ export const orderSchema = z.object({
   items: z
     .array(z.object({ id: z.string(), qty: z.number().int().min(1).max(MAX_QTY) }))
     .min(1, "Your cart is empty"),
-  payment: z.enum(["cod", "upi"]),
+  payment: z.enum(["cod", "upi", "online"]),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;
@@ -118,6 +118,7 @@ export interface Order {
 export const PAYMENT_LABEL: Record<OrderInput["payment"], string> = {
   cod: "Cash on delivery",
   upi: "UPI on delivery",
+  online: "Online payment",
 };
 
 export function orderWhatsAppText(o: Order) {

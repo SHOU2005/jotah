@@ -7,6 +7,7 @@ import { buildOrder, orderWhatsAppText } from "@shared/products";
 import { robotsTxt, sitemapXml } from "@shared/site";
 import { hasDatabase, isAdmin, listOrders, saveOrder, updateOrder } from "@shared/orders-db";
 import { addScore, cleanName, hasScoresDb, MAX_SCORE, topScores, weekKey } from "@shared/scores-db";
+import { createPaymentOrder, verifyPayment } from "@shared/razorpay";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // SEO: robots.txt and sitemap.xml
@@ -37,6 +38,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try { await saveOrder(order); } catch (err) { console.error(`DB SAVE FAILED for ${order.id}`, err); }
     }
     res.status(201).json(order);
+  });
+
+  // ── Razorpay online payment (same logic as api/create-order.ts, api/verify-payment.ts) ──
+  app.post("/api/create-order", async (req, res) => {
+    const { status, body } = await createPaymentOrder(req.body);
+    res.status(status).json(body);
+  });
+  app.post("/api/verify-payment", async (req, res) => {
+    const { status, body } = await verifyPayment(req.body);
+    res.status(status).json(body);
   });
 
   app.get("/api/admin", async (req, res) => {
