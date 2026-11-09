@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, ShoppingBag } from "lucide-react";
+import { useCart } from "@/lib/cart";
+import { DEFAULT_PRODUCT } from "@shared/products";
 import { JMark, Wordmark, WhatsAppIcon } from "./brand";
 import { ADDRESS, CALL_URL, EMAIL, PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 
@@ -23,6 +25,37 @@ export function ScrollProgress() {
   return <div ref={ref} aria-hidden className="fixed left-0 top-0 z-[60] h-[3px] w-full origin-left scale-x-0 bg-flame" />;
 }
 
+/** Phones only: sticky bottom bar with the main buy action + WhatsApp. */
+export function MobileBuyBar() {
+  const [location] = useLocation();
+  const { add, open } = useCart();
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 420);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  const hiddenHere = ["/checkout", "/game"].includes(location) || location.startsWith("/admin");
+  if (!show || hiddenHere) return null;
+  return (
+    <div className="animate-bar-up fixed inset-x-0 bottom-0 z-50 border-t border-ink/10 bg-paper/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_30px_-12px_rgba(22,18,14,.35)] backdrop-blur md:hidden" data-testid="mobile-buy-bar">
+      <div className="flex items-center gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-semibold uppercase tracking-wider text-ink-soft">{DEFAULT_PRODUCT.size} · {DEFAULT_PRODUCT.packs} cones</p>
+          <p className="font-display text-xl font-black leading-tight">₹{DEFAULT_PRODUCT.price}</p>
+        </div>
+        <button onClick={() => { add(DEFAULT_PRODUCT.id); setTimeout(open, 200); }} className="btn btn-ink !px-5 !py-3 text-sm" data-testid="bar-add">
+          <ShoppingBag className="h-4 w-4" /> Add to cart
+        </button>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp What The Fun" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-wa text-[#06260f]">
+          <WhatsAppIcon className="h-6 w-6" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
 /** Floating WhatsApp button, pre-filled with "What The Fun". */
 export function WhatsAppFloat() {
   const [location] = useLocation();
@@ -33,7 +66,7 @@ export function WhatsAppFloat() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with Jotah on WhatsApp"
-      className="wa-pulse group fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-wa p-4 text-[#06260f] shadow-xl transition-transform hover:scale-105 sm:bottom-6 sm:right-6"
+      className="wa-pulse group fixed bottom-5 right-5 z-50 hidden items-center md:flex gap-2 rounded-full bg-wa p-4 text-[#06260f] shadow-xl transition-transform hover:scale-105 sm:bottom-6 sm:right-6"
       data-testid="whatsapp-float"
     >
       <WhatsAppIcon className="h-6 w-6" />
@@ -87,7 +120,7 @@ export function AgeGate() {
 
 export function Footer() {
   return (
-    <footer className="bg-ink text-paper">
+    <footer className="bg-ink pb-20 text-paper md:pb-0">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
@@ -104,6 +137,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li><a className="hover:text-kraft" href="/#pack">The Pack</a></li>
               <li><a className="hover:text-kraft" href="/#shop">Shop</a></li>
+              <li><a className="hover:text-kraft" href="/about">About Jotah</a></li>
               <li><a className="hover:text-kraft" href="/product">Product details</a></li>
               <li><a className="hover:text-kraft" href="/guides">Cone guides</a></li>
               <li><a className="hover:text-kraft" href="/game">Play: Stack the Packs</a></li>

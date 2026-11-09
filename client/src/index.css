@@ -128,6 +128,13 @@ body::after {
 @keyframes badge-wobble { 0%,100% { transform: rotate(12deg) scale(1); } 50% { transform: rotate(4deg) scale(1.06); } }
 .animate-spin-slow-badge { animation: badge-wobble 4s ease-in-out infinite; }
 
+/* Horizontal carousels without a visible scrollbar */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes bar-up { from { transform: translateY(110%); } to { transform: none; } }
+.animate-bar-up { animation: bar-up .4s cubic-bezier(.2,.8,.2,1) both; }
+
 /* Marquee */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-track { animation: marquee 38s linear infinite; }

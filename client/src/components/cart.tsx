@@ -193,7 +193,7 @@ export function ShopGrid() {
     window.setTimeout(open, 350);
   };
   return (
-    <div className="grid gap-5 sm:grid-cols-3">
+    <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0">
       {SHOP_PRODUCTS.map((p) => (
         <article
           key={p.id}
@@ -204,7 +204,7 @@ export function ShopGrid() {
             e.currentTarget.style.transform = `perspective(900px) rotateX(${(-y * 8).toFixed(2)}deg) rotateY(${(x * 10).toFixed(2)}deg) translateY(-4px)`;
           }}
           onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
-          className="group relative flex flex-col rounded-3xl bg-paper p-5 shadow-[0_1px_0_rgba(22,18,14,.06)] transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:shadow-[0_30px_60px_-28px_rgba(42,29,20,.55)]"
+          className="group relative flex w-[78%] shrink-0 snap-center flex-col rounded-3xl bg-paper p-5 sm:w-auto shadow-[0_1px_0_rgba(22,18,14,.06)] transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:shadow-[0_30px_60px_-28px_rgba(42,29,20,.55)]"
           data-testid={`shop-${p.id}`}
         >
           {p.badge && <span className="absolute left-5 top-5 z-10 rounded-full bg-flame px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">{p.badge}</span>}

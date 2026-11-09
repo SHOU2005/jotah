@@ -181,13 +181,15 @@ export function Specs() {
             </p>
           </Reveal>
         </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 grid gap-3 md:mt-14 md:grid-cols-3 md:gap-5">
           {specs.map((s, i) => (
             <Reveal key={s.title} delay={i * 120}>
-              <article className="h-full rounded-3xl bg-paper/70 p-8 backdrop-blur transition-transform duration-300 hover:-translate-y-1">
-                <div className="flex h-16 items-center">{s.icon}</div>
-                <h3 className="mt-6 text-3xl font-black uppercase" style={{ fontStretch: "118%" }}>{s.title}</h3>
-                <p className="mt-3 text-ink-soft">{s.text}</p>
+              <article className="flex h-full items-center gap-5 rounded-3xl bg-paper/70 p-5 backdrop-blur transition-transform duration-300 hover:-translate-y-1 md:block md:p-8">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center md:h-16 md:w-auto md:justify-start">{s.icon}</div>
+                <div>
+                <h3 className="text-xl font-black uppercase md:mt-6 md:text-3xl" style={{ fontStretch: "118%" }}>{s.title}</h3>
+                <p className="mt-1 text-sm text-ink-soft md:mt-3 md:text-base">{s.text}</p>
+                </div>
               </article>
             </Reveal>
           ))}
@@ -220,9 +222,9 @@ export function PackGallery() {
           </div>
           <a href="/product" className="btn btn-ghost self-start md:self-auto">Product details <ArrowUpRight className="h-4 w-4" /></a>
         </Reveal>
-        <div className="grid gap-x-5 gap-y-10 md:grid-cols-2">
+        <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-x-5 md:gap-y-10 md:overflow-visible md:px-0 md:pb-0">
           {shots.map((s, i) => (
-            <Reveal key={s.label} delay={i * 90}>
+            <Reveal key={s.label} delay={i * 90} className="w-[85%] shrink-0 snap-center md:w-auto">
               <figure className="group h-full">
                 <div className="photo-frame">
                   <img src={s.src} alt={`Jotah pack ${s.label.toLowerCase()} — ${s.title}`} loading="lazy" className="aspect-[5/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
@@ -261,7 +263,7 @@ export function WtfBand() {
             <a href="#play" className="btn btn-ghost-light text-base" data-testid="wtf-game">🎮 Play the game</a>
           </div>
         </Reveal>
-        <Reveal delay={150} className="mx-auto w-full max-w-sm">
+        <Reveal delay={150} className="mx-auto hidden w-full max-w-sm md:block">
           <div className="kraft-texture rotate-3 rounded-[2rem] bg-kraft p-6 shadow-2xl transition-transform duration-500 hover:rotate-0 hover:scale-[1.03]">
             <div className="rounded-2xl bg-white p-4">
               <img src="/images/qr.jpg" alt="Jotah What The Fun QR code" className="aspect-square w-full" loading="lazy" />
