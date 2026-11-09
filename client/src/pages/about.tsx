@@ -5,7 +5,7 @@ import { Footer } from "@/components/site-chrome";
 import { JsonLd } from "@/components/json-ld";
 import { WhatsAppIcon } from "@/components/brand";
 import { usePageMeta } from "@/lib/seo";
-import { ADDRESS, EMAIL, PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
+import { ADDRESS, EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 import { SHOP_PRODUCTS } from "@shared/products";
 import { SITE_URL } from "@shared/site";
 
@@ -45,6 +45,7 @@ export default function About() {
             areaServed: ["Gurugram", "Delhi", "Noida", "Faridabad", "India"].map((n) => ({ "@type": "Place", name: n })),
             telephone: "+91-9205617375",
             email: EMAIL,
+            sameAs: [INSTAGRAM_URL],
           },
         }} />
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
@@ -73,6 +74,7 @@ export default function About() {
           <h2 className="mt-14 text-2xl font-black md:text-3xl">Contact</h2>
           <ul className="mt-5 space-y-2 text-lg text-ink-soft">
             <li>WhatsApp / phone: <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-ink">{PHONE_DISPLAY}</a></li>
+            <li>Instagram: <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer me" className="font-semibold text-ink">{INSTAGRAM_HANDLE}</a></li>
             <li>Email: <a href={`mailto:${EMAIL}`} className="font-semibold text-ink">{EMAIL}</a></li>
             <li>Address: {ADDRESS}</li>
           </ul>

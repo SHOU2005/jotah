@@ -83,6 +83,7 @@ export function llmsTxt() {
 - Price: ₹15 per cone (MRP). Single packs are sold in shops; online orders start at a 5-Pack.
 - Where to buy: paan and tobacco shops across Gurgaon (Gurugram); online at ${SITE_URL}/product with cash or UPI on delivery in Gurgaon
 - Contact: WhatsApp/phone +91 92056 17375 (message "What The Fun"), email shourya.pandey.ai@gmail.com
+- Instagram: @jotah.in — https://www.instagram.com/jotah.in/
 - Retailers and wholesale: WhatsApp +91 92056 17375
 
 ## Online packs
