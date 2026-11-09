@@ -8,7 +8,12 @@ export interface Product {
   /** Short size label for pickers, e.g. "5-Pack". */
   size: string;
   short: string;
+  /** Selling price in rupees (after any `off` discount is applied below). */
   price: number;
+  /** Pack discount in percent. `price` is set from `mrp` at load time. */
+  off?: number;
+  /** Price before the pack discount (set automatically when `off` is given). */
+  mrp?: number;
   /** How many packs are inside — each pack holds 1 cone. */
   packs: number;
   image: string;
@@ -37,6 +42,7 @@ export const PRODUCTS: Record<string, Product> = {
     size: "5-Pack",
     short: `5 cones · ${SPECS}`,
     price: 75,
+    off: 5,
     packs: 5,
     image: "/images/cones/cone-tips.jpg",
     badge: "Most popular",
@@ -47,6 +53,7 @@ export const PRODUCTS: Record<string, Product> = {
     size: "10-Pack",
     short: `10 cones · ${SPECS}`,
     price: 150,
+    off: 10,
     packs: 10,
     image: "/images/cones/box-moody.jpg",
   },
@@ -56,6 +63,7 @@ export const PRODUCTS: Record<string, Product> = {
     size: "Box of 25",
     short: `25 cones · ${SPECS}`,
     price: 375,
+    off: 15,
     packs: 25,
     image: "/images/cones/box-beige.jpg",
     badge: "Stock up",
@@ -73,6 +81,14 @@ export const PRODUCTS: Record<string, Product> = {
     hidden: true,
   },
 };
+
+// Apply pack discounts: `price` above is the MRP; the selling price is rounded to whole rupees.
+for (const p of Object.values(PRODUCTS)) {
+  if (p.off) {
+    p.mrp = p.price;
+    p.price = Math.round((p.price * (100 - p.off)) / 100);
+  }
+}
 
 /** Products shown in the shop, in display order. */
 export const SHOP_PRODUCTS = Object.values(PRODUCTS).filter((p) => !p.hidden);
@@ -93,7 +109,7 @@ export const orderSchema = z.object({
   items: z
     .array(z.object({ id: z.string(), qty: z.number().int().min(1).max(MAX_QTY) }))
     .min(1, "Your cart is empty"),
-  payment: z.enum(["cod", "upi", "online"]),
+  payment: z.enum(["online", "cod", "upi"]),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;
@@ -110,12 +126,32 @@ export interface Order {
   id: string;
   createdAt: string;
   customer: OrderInput["customer"];
-  payment: OrderInput["payment"];
+  payment: PaymentMethod;
   lines: OrderLine[];
   total: number;
 }
 
-export const PAYMENT_LABEL: Record<OrderInput["payment"], string> = {
+export type PaymentMethod = OrderInput["payment"];
+
+/** COD orders must pay this much online up front to confirm; the rest is cash on delivery. */
+export const COD_ADVANCE = 100;
+
+/** Extra charge for cash on delivery, by order value (items total, in rupees). */
+export function codFee(itemsTotal: number) {
+  if (itemsTotal < 300) return 49;
+  if (itemsTotal < 1000) return 79;
+  return 99;
+}
+export const COD_FEE_ID = "cod-fee";
+
+/** How much the buyer pays online now: full total, the COD advance, or nothing (UPI on delivery). */
+export function payNow(payment: PaymentMethod, total: number) {
+  if (payment === "online") return total;
+  if (payment === "cod") return Math.min(COD_ADVANCE, total);
+  return 0;
+}
+
+export const PAYMENT_LABEL: Record<PaymentMethod, string> = {
   cod: "Cash on delivery",
   upi: "UPI on delivery",
   online: "Online payment",
@@ -128,6 +164,7 @@ export function orderWhatsAppText(o: Order) {
     `New order ${o.id}`,
     ...o.lines.map((l) => `• ${l.name} × ${l.qty} = ₹${l.lineTotal}`),
     `Total: ₹${o.total} (${PAYMENT_LABEL[o.payment]})`,
+    ...(o.payment === "cod" ? [`Advance paid online: ₹${payNow("cod", o.total)} · Cash on delivery: ₹${o.total - payNow("cod", o.total)}`] : []),
     "",
     `${o.customer.name} · ${o.customer.phone}`,
     `${o.customer.address}, ${o.customer.city} - ${o.customer.pincode}`,
@@ -147,6 +184,10 @@ export function buildOrder(raw: unknown): { ok: true; order: Order } | { ok: fal
     const product = PRODUCTS[item.id];
     if (!product || product.hidden) return { ok: false, message: "A product in your cart is no longer available" };
     lines.push({ id: product.id, name: product.name, price: product.price, qty: item.qty, lineTotal: product.price * item.qty });
+  }
+  if (payment === "cod") {
+    const fee = codFee(lines.reduce((s, l) => s + l.lineTotal, 0));
+    lines.push({ id: COD_FEE_ID, name: "COD charge", price: fee, qty: 1, lineTotal: fee });
   }
   return {
     ok: true,

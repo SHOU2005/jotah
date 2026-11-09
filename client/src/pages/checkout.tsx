@@ -9,20 +9,21 @@ import { useCart } from "@/lib/cart";
 import { usePageMeta } from "@/lib/seo";
 import { whatsappLink, PHONE_DISPLAY } from "@/lib/contact";
 import { createPaymentOrder, loadRazorpay, openCheckout, verifyPayment, type PaymentOrder } from "@/lib/razorpay";
-import { orderSchema, orderWhatsAppText, PAYMENT_LABEL, type Order, type OrderInput } from "@shared/products";
+import { codFee, COD_ADVANCE, orderSchema, orderWhatsAppText, PAYMENT_LABEL, payNow, type Order, type OrderInput } from "@shared/products";
 
 type Customer = OrderInput["customer"];
+type Paid = "paid" | "advance" | null;
 const EMPTY: Customer = { name: "", phone: "", address: "", city: "", pincode: "", notes: "" };
 
 export default function Checkout() {
   usePageMeta("/checkout");
   const { lines, subtotal, count, clear } = useCart();
   const [c, setC] = useState<Customer>(EMPTY);
-  const [payment, setPayment] = useState<OrderInput["payment"]>("cod");
+  const [payment, setPayment] = useState<OrderInput["payment"]>("online");
   const [errors, setErrors] = useState<Partial<Record<keyof Customer | "form", string>>>({});
   const [busy, setBusy] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
-  const [paid, setPaid] = useState(false);
+  const [paid, setPaid] = useState<Paid>(null);
   // Razorpay order for the current cart + details, reused if the buyer closes the modal and retries.
   const pending = useRef<{ key: string; po: PaymentOrder } | null>(null);
 
@@ -45,7 +46,7 @@ export default function Checkout() {
       document.querySelector("[aria-invalid='true']")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    if (payment === "online") return payOnline(check.data);
+    if (payment !== "upi") return payOnline(check.data);
     setBusy(true);
     try {
       const res = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(check.data) });
@@ -83,7 +84,7 @@ export default function Checkout() {
       await verifyPayment(result);
       pending.current = null;
       setOrder(po.order);
-      setPaid(true);
+      setPaid(po.order.payment === "cod" ? "advance" : "paid");
       clear();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -94,6 +95,10 @@ export default function Checkout() {
   };
 
   if (order) return <Success order={order} paid={paid} />;
+
+  const fee = payment === "cod" ? codFee(subtotal) : 0;
+  const total = subtotal + fee;
+  const now = payNow(payment, total);
 
   const field = (k: keyof Customer) =>
     `w-full rounded-xl border bg-paper px-4 py-3.5 text-ink placeholder:text-ink-soft/50 outline-none transition focus:ring-2 ${
@@ -162,7 +167,7 @@ export default function Checkout() {
                   <div className="grid gap-3 sm:grid-cols-2">
                     {([
                       ["online", CreditCard, "UPI, cards, netbanking or wallets — pay now, secured by Razorpay"],
-                      ["cod", Banknote, "Pay in cash when your order arrives"],
+                      ["cod", Banknote, `Pay ₹${COD_ADVANCE} now to confirm, rest in cash on delivery. COD charge ₹${codFee(subtotal)}.`],
                       ["upi", Smartphone, "Pay by any UPI app on delivery"],
                     ] as const).map(([val, Icon, desc]) => (
                       <label key={val} className={`flex cursor-pointer ${val === "online" ? "sm:col-span-2" : ""} gap-4 rounded-2xl border-2 p-4 transition ${payment === val ? "border-ink bg-paper" : "border-ink/10 hover:border-ink/30"}`}>
@@ -199,11 +204,18 @@ export default function Checkout() {
                 <dl className="mt-6 space-y-2 border-t border-paper/15 pt-6 text-sm">
                   <div className="flex justify-between"><dt className="text-paper/60">Items ({count})</dt><dd className="tabular-nums">₹{subtotal}</dd></div>
                   <div className="flex justify-between"><dt className="text-paper/60">Delivery</dt><dd>Confirmed on WhatsApp</dd></div>
-                  <div className="flex items-baseline justify-between border-t border-paper/15 pt-4"><dt className="font-bold">Total</dt><dd className="font-display text-3xl font-black tabular-nums">₹{subtotal}</dd></div>
+                  {fee > 0 && <div className="flex justify-between"><dt className="text-paper/60">COD charge</dt><dd className="tabular-nums">₹{fee}</dd></div>}
+                  <div className="flex items-baseline justify-between border-t border-paper/15 pt-4"><dt className="font-bold">Total</dt><dd className="font-display text-3xl font-black tabular-nums">₹{total}</dd></div>
+                  {payment === "cod" && (
+                    <>
+                      <div className="flex justify-between pt-2"><dt className="text-paper/60">Pay now (advance)</dt><dd className="font-bold tabular-nums">₹{now}</dd></div>
+                      <div className="flex justify-between"><dt className="text-paper/60">Cash on delivery</dt><dd className="tabular-nums">₹{total - now}</dd></div>
+                    </>
+                  )}
                 </dl>
                 {errors.form && <p className="mt-4 rounded-xl bg-flame/20 p-3 text-sm" role="alert">{errors.form}</p>}
                 <button type="submit" disabled={busy} className="btn btn-wa mt-6 w-full text-base disabled:opacity-70" data-testid="place-order">
-                  {busy ? <><Loader2 className="h-5 w-5 animate-spin" /> {payment === "online" ? "Processing payment…" : "Placing order…"}</> : <>{payment === "online" ? "Pay" : "Place order"} · ₹{subtotal}</>}
+                  {busy ? <><Loader2 className="h-5 w-5 animate-spin" /> {payment === "upi" ? "Placing order…" : "Processing payment…"}</> : payment === "cod" ? <>Pay ₹{now} advance</> : <>{payment === "online" ? "Pay" : "Place order"} · ₹{total}</>}
                 </button>
                 <p className="mt-4 text-center text-xs text-paper/50">18+ only. By ordering you confirm you are of legal age.</p>
               </aside>
@@ -216,7 +228,8 @@ export default function Checkout() {
   );
 }
 
-function Success({ order, paid }: { order: Order; paid: boolean }) {
+function Success({ order, paid }: { order: Order; paid: Paid }) {
+  const now = payNow(order.payment, order.total);
   return (
     <>
       <Navigation solid />
@@ -226,7 +239,7 @@ function Success({ order, paid }: { order: Order; paid: boolean }) {
             <CheckCircle2 className="h-12 w-12" />
           </div>
           <p className="eyebrow mt-8 animate-rise">Order {order.id}</p>
-          <h1 className="display mt-3 animate-rise text-[clamp(2.4rem,6vw,4.2rem)] [animation-delay:80ms]">What the fun!<br />{paid ? "Payment received." : "Order placed."}</h1>
+          <h1 className="display mt-3 animate-rise text-[clamp(2.4rem,6vw,4.2rem)] [animation-delay:80ms]">What the fun!<br />{paid === "paid" ? "Payment received." : "Order placed."}</h1>
           <p className="mx-auto mt-6 max-w-md animate-rise text-lg text-ink-soft [animation-delay:160ms]">
             One last step — tap below to send your order to us on WhatsApp so we can confirm delivery.
           </p>
@@ -244,7 +257,7 @@ function Success({ order, paid }: { order: Order; paid: boolean }) {
             {order.lines.map((l) => (
               <div key={l.id} className="flex justify-between py-1"><span>{l.name} × {l.qty}</span><span className="font-semibold tabular-nums">₹{l.lineTotal}</span></div>
             ))}
-            <div className="mt-3 flex justify-between border-t border-ink/10 pt-3 font-bold"><span>Total · {paid ? "Paid online" : PAYMENT_LABEL[order.payment]}</span><span className="tabular-nums">₹{order.total}</span></div>
+            <div className="mt-3 flex justify-between border-t border-ink/10 pt-3 font-bold"><span>Total · {paid === "paid" ? "Paid online" : paid === "advance" ? `₹${now} paid · ₹${order.total - now} cash on delivery` : PAYMENT_LABEL[order.payment]}</span><span className="tabular-nums">₹{order.total}</span></div>
             <p className="mt-4 text-sm text-ink-soft">Delivering to {order.customer.name}, {order.customer.address}, {order.customer.city} - {order.customer.pincode}</p>
           </div>
           <p className="mt-6 text-sm text-ink-soft">Questions? Call {PHONE_DISPLAY}</p>

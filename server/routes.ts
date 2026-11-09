@@ -3,11 +3,10 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema } from "@shared/schema";
 import { z } from "zod";
-import { buildOrder, orderWhatsAppText } from "@shared/products";
 import { robotsTxt, sitemapXml } from "@shared/site";
-import { hasDatabase, isAdmin, listOrders, saveOrder, updateOrder } from "@shared/orders-db";
+import { hasDatabase, isAdmin, listOrders, updateOrder } from "@shared/orders-db";
 import { addScore, cleanName, hasScoresDb, MAX_SCORE, topScores, weekKey } from "@shared/scores-db";
-import { createPaymentOrder, verifyPayment } from "@shared/razorpay";
+import { createPaymentOrder, placeDeliveryOrder, verifyPayment } from "@shared/razorpay";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // SEO: robots.txt and sitemap.xml
@@ -30,14 +29,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // ── Shop orders (same logic as the Vercel Functions in /api) ──
   app.post("/api/orders", async (req, res) => {
-    const result = buildOrder(req.body);
-    if (!result.ok) return res.status(400).json({ message: result.message });
-    const order = result.order;
-    console.log(`🛒 NEW ORDER ${order.id}\n${orderWhatsAppText(order)}\n`);
-    if (hasDatabase()) {
-      try { await saveOrder(order); } catch (err) { console.error(`DB SAVE FAILED for ${order.id}`, err); }
-    }
-    res.status(201).json(order);
+    const { status, body } = await placeDeliveryOrder(req.body);
+    res.status(status).json(body);
   });
 
   // ── Razorpay online payment (same logic as api/create-order.ts, api/verify-payment.ts) ──

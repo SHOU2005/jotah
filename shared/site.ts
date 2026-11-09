@@ -15,7 +15,7 @@ const STATIC: Record<string, Omit<PageMeta, "path">> = {
   },
   "/product": {
     title: "Buy Jotah Pre-Rolled Cones Online — 5-Pack, 10-Pack, Box of 25",
-    description: "Buy Jotah pre-rolled cones online: slow burn, France paper, 13.8 GSM. ₹15 per cone — 5-Pack ₹75, 10-Pack ₹150, Box of 25 ₹375. Cash or UPI on delivery.",
+    description: "Buy Jotah pre-rolled cones online: slow burn, France paper, 13.8 GSM. ₹15 per cone — 5-Pack ₹71 (5% off), 10-Pack ₹135 (10% off), Box of 25 ₹319 (15% off). Pay online, COD or UPI on delivery.",
   },
   "/what-the-fun": {
     title: "What The Fun — Scan for Surprise | Jotah",

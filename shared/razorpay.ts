@@ -1,10 +1,11 @@
-// Server-only: Razorpay Standard Checkout. Used by the Vercel Functions in /api
+// Server-only: checkout handlers (Razorpay Standard Checkout + delivery orders). Used by the Vercel Functions in /api
 // and the local Express server. Never import this from client code — it reads
 // RAZORPAY_KEY_SECRET.
 import Razorpay from "razorpay";
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { buildOrder, orderWhatsAppText } from "./products.js";
+import { buildOrder, orderWhatsAppText, payNow } from "./products.js";
 import { hasDatabase, saveOrder, updateOrder } from "./orders-db.js";
+import { notifyNewOrder } from "./notify.js";
 
 const MIN_AMOUNT_PAISE = 100; // Razorpay minimum: ₹1
 const CURRENCY = "INR";
@@ -29,25 +30,30 @@ function rzpError(err: any, what: string): Result {
 }
 
 /**
- * POST /api/create-order — body is the same order input as /api/orders.
+ * POST /api/create-order — body is the same order input as /api/orders, with
+ * payment "online" (pay the full total now) or "cod" (pay the COD advance now).
  * Prices the order on the server, creates the Razorpay order (receipt = our
  * order id), saves our order as unpaid, and returns what the checkout modal needs.
  */
 export async function createPaymentOrder(raw: unknown): Promise<Result> {
   if (!hasRazorpay()) return { status: 503, body: { message: "Online payment is not set up yet" } };
 
-  const result = buildOrder({ ...(raw as object), payment: "online" });
+  const result = buildOrder(raw);
   if (!result.ok) return { status: 400, body: { message: result.message } };
   const order = result.order;
+  if (order.payment !== "online" && order.payment !== "cod") {
+    return { status: 400, body: { message: "This payment method does not need online payment" } };
+  }
 
-  const amount = order.total * 100; // rupees → paise
+  const kind = order.payment === "cod" ? "cod_advance" : "full";
+  const amount = payNow(order.payment, order.total) * 100; // rupees → paise
   if (!Number.isInteger(amount) || amount < MIN_AMOUNT_PAISE) {
     return { status: 400, body: { message: "Order amount must be at least ₹1" } };
   }
 
   let rzpOrder;
   try {
-    rzpOrder = await rzp().orders.create({ amount, currency: CURRENCY, receipt: order.id, notes: { jotah_order_id: order.id } });
+    rzpOrder = await rzp().orders.create({ amount, currency: CURRENCY, receipt: order.id, notes: { jotah_order_id: order.id, kind } });
   } catch (err) {
     return rzpError(err, "CREATE ORDER");
   }
@@ -92,19 +98,50 @@ export async function verifyPayment(raw: unknown): Promise<Result> {
   // Signature is genuine. Find which Jotah order this payment belongs to via the
   // receipt we set server-side (never trust an order id sent by the browser).
   let receipt = "";
+  let paid: "paid" | "advance" = "paid";
   try {
-    receipt = String((await rzp().orders.fetch(orderId)).receipt ?? "");
+    const ro = await rzp().orders.fetch(orderId);
+    receipt = String(ro.receipt ?? "");
+    if ((ro.notes as Record<string, unknown> | undefined)?.kind === "cod_advance") paid = "advance";
   } catch (err) {
     console.error(`RAZORPAY FETCH ORDER FAILED ${orderId} (payment ${paymentId} is verified)`, err);
   }
 
-  console.log(`PAYMENT VERIFIED ${receipt || "?"} · ${orderId} · ${paymentId}`);
+  console.log(`PAYMENT VERIFIED (${paid}) ${receipt || "?"} · ${orderId} · ${paymentId}`);
   if (receipt && hasDatabase()) {
     try {
-      await updateOrder(receipt, { paymentStatus: "paid" });
+      const updated = await updateOrder(receipt, { paymentStatus: paid });
+      if (updated) await notifyNewOrder(updated, paid, paymentId);
     } catch (err) {
       console.error(`DB PAID UPDATE FAILED for ${receipt}`, err);
     }
+  } else {
+    console.warn(`No database: email for ${receipt || orderId} not sent (order details unavailable)`);
   }
-  return { status: 200, body: { verified: true, orderId: receipt, paymentId } };
+  return { status: 200, body: { verified: true, orderId: receipt, paymentStatus: paid, paymentId } };
+}
+
+/**
+ * POST /api/orders — orders paid on delivery by UPI (no online payment step).
+ * COD and online orders go through /api/create-order instead.
+ */
+export async function placeDeliveryOrder(raw: unknown): Promise<Result> {
+  const result = buildOrder(raw);
+  if (!result.ok) return { status: 400, body: { message: result.message } };
+  const order = result.order;
+  if (order.payment !== "upi") return { status: 400, body: { message: "Please complete the payment step for this order" } };
+
+  console.log(`NEW ORDER ${order.id}\n${orderWhatsAppText(order)}`);
+  if (hasDatabase()) {
+    try {
+      await saveOrder(order);
+    } catch (err) {
+      console.error(`DB SAVE FAILED for ${order.id}`, err);
+      // Don't lose the sale: the buyer still confirms on WhatsApp and the log above has the details.
+    }
+  } else {
+    console.warn("DATABASE_URL not set — order only logged");
+  }
+  await notifyNewOrder(order, "unpaid");
+  return { status: 201, body: order as unknown as Record<string, unknown> };
 }

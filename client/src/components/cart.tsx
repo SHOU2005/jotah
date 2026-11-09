@@ -211,9 +211,11 @@ export function ShopGrid() {
           <PackStack count={p.packs} className="rounded-2xl bg-paper-2" />
           <div className="mt-5 flex items-baseline justify-between gap-2">
             <h3 className="font-display text-2xl font-black">{p.size}</h3>
-            <p className="font-display text-2xl font-black tabular-nums">₹{p.price}</p>
+            <p className="font-display text-2xl font-black tabular-nums">
+              {p.mrp && <span className="mr-2 text-base font-normal text-ink-soft line-through">₹{p.mrp}</span>}₹{p.price}
+            </p>
           </div>
-          <p className="mt-1 text-sm text-ink-soft">{p.packs > 1 ? `${p.packs} cones · ₹${Math.round(p.price / p.packs)} each` : "1 cone · MRP ₹15"}</p>
+          <p className="mt-1 text-sm text-ink-soft">{p.packs > 1 ? `${p.packs} cones · ₹${Math.round(p.price / p.packs)} each` : "1 cone · MRP ₹15"}{p.off ? ` · ${p.off}% off` : ""}</p>
           <button onClick={() => onAdd(p.id)} className="btn btn-ink relative mt-5 w-full overflow-hidden" data-testid={`add-${p.id}`}>
             <span className={`flex items-center gap-2 transition-all duration-300 ${justAdded === p.id ? "-translate-y-8 opacity-0" : ""}`}><ShoppingBag className="h-4 w-4" /> Add to cart</span>
             <span className={`absolute inset-0 flex items-center justify-center gap-2 transition-all duration-300 ${justAdded === p.id ? "" : "translate-y-8 opacity-0"}`}><Check className="h-4 w-4" /> Added!</span>
@@ -241,7 +243,7 @@ export function SizePicker({ value, onChange }: { value: string; onChange: (id: 
           >
             {p.badge && <span className="absolute -top-2.5 right-3 rounded-full bg-flame px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">{p.badge}</span>}
             <span className="block font-display text-lg font-black">{p.size}</span>
-            <span className="mt-0.5 block text-sm text-ink-soft">₹{p.price}{p.packs > 1 ? ` · ${p.packs} packs` : ""}</span>
+            <span className="mt-0.5 block text-sm text-ink-soft">₹{p.price}{p.packs > 1 ? ` · ${p.packs} packs` : ""}{p.off ? ` · ${p.off}% off` : ""}</span>
           </button>
         );
       })}
