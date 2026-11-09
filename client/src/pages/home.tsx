@@ -1,5 +1,5 @@
 import Navigation from "@/components/navigation";
-import { Contact, Faq, GuidesTeaser, Hero, Lookbook, Marquee, PackGallery, PlaySection, Shop, Specs, Story, WhereToBuy, WtfBand } from "@/components/home-sections";
+import { Contact, Faq, GuidesTeaser, Hero, InstagramStrip, Lookbook, Marquee, PackGallery, PlaySection, Shop, Specs, Story, WhereToBuy, WtfBand } from "@/components/home-sections";
 import { Footer } from "@/components/site-chrome";
 import { usePageMeta } from "@/lib/seo";
 import { TornEdge } from "@/components/brand";
@@ -29,6 +29,7 @@ export default function Home() {
         <TornEdge fill={INK} bg="bg-paper-2" flip />
         <WhereToBuy />
         <GuidesTeaser />
+        <InstagramStrip />
         <Faq />
         <TornEdge fill={KRAFT} bg="bg-paper" />
         <Contact />

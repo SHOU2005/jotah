@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { RotateCcw, ShoppingBag, Trophy } from "lucide-react";
 import { WhatsAppIcon } from "./brand";
+import { SCORE_SAVED_EVENT } from "./leaderboard";
 
 /* ─────────────────────────────────────────────────────────────
    STACK THE PACKS — an original Jotah mini-game.
@@ -51,6 +52,7 @@ export default function StackGame({ autoFocus = false, compact = false }: { auto
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(0);
   const [newBest, setNewBest] = useState(false);
+  const [round, setRound] = useState(0); // resets the score form each game
 
   // Mutable game state lives in a ref so the render loop never waits on React.
   const g = useRef({
@@ -92,6 +94,7 @@ export default function StackGame({ autoFocus = false, compact = false }: { auto
     setPhase("playing");
     setScore(0);
     setNewBest(false);
+    setRound((r) => r + 1);
     boxRef.current?.focus({ preventScroll: true });
   }, [reset]);
 
@@ -365,7 +368,8 @@ export default function StackGame({ autoFocus = false, compact = false }: { auto
           <p className="font-display text-7xl font-black" style={{ fontStretch: "115%" }}>{score}</p>
           <p className="text-paper/70">packs stacked</p>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-paper/60"><Trophy className="h-4 w-4" /> Best: {best}</p>
-          <div className="mt-6 grid w-full max-w-[250px] gap-3">
+          {score > 0 && <SubmitScore key={round} score={score} />}
+          <div className="mt-4 grid w-full max-w-[250px] gap-2.5">
             <button onClick={start} className="btn btn-wa" data-testid="game-again"><RotateCcw className="h-4 w-4" /> Play again</button>
             <a href={`https://wa.me/?text=${encodeURIComponent(shareText)}`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light"><WhatsAppIcon className="h-4 w-4" /> Challenge a friend</a>
             <Link href="/product" className="btn bg-paper text-ink hover:bg-white"><ShoppingBag className="h-4 w-4" /> Shop cones</Link>
@@ -373,5 +377,53 @@ export default function StackGame({ autoFocus = false, compact = false }: { auto
         </div>
       )}
     </div>
+  );
+}
+
+const NAME_KEY = "jotah-player-name";
+
+/** Nickname + submit to the weekly leaderboard. */
+function SubmitScore({ score }: { score: number }) {
+  const [name, setName] = useState(() => { try { return localStorage.getItem(NAME_KEY) || ""; } catch { return ""; } });
+  const [state, setState] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [msg, setMsg] = useState("");
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setState("saving");
+    try {
+      const res = await fetch("/api/scores", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, score }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Couldn't save score");
+      try { localStorage.setItem(NAME_KEY, name.trim()); } catch {}
+      setState("done");
+      setMsg(data.rank === 1 ? "🥇 You're #1 this week!" : `You're #${data.rank} this week 🔥`);
+      window.dispatchEvent(new Event(SCORE_SAVED_EVENT));
+    } catch (err) {
+      setState("error");
+      setMsg(err instanceof Error ? err.message : "Couldn't save score");
+    }
+  };
+
+  if (state === "done") return <p className="mt-4 rounded-full bg-paper/10 px-4 py-2 text-sm font-semibold" data-testid="score-rank">{msg}</p>;
+  return (
+    <form onSubmit={submit} onKeyDown={(e) => e.stopPropagation()} className="mt-4 w-full max-w-[250px]">
+      <div className="flex gap-2">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={16}
+          placeholder="Your name"
+          aria-label="Your name for the leaderboard"
+          className="min-w-0 flex-1 rounded-full border border-paper/25 bg-black/30 px-4 py-2.5 text-sm text-paper placeholder:text-paper/40 outline-none focus:border-paper"
+          data-testid="score-name"
+        />
+        <button disabled={state === "saving" || name.trim().length < 2} className="rounded-full bg-paper px-4 text-sm font-bold text-ink disabled:opacity-50" data-testid="score-submit">
+          {state === "saving" ? "…" : "Submit"}
+        </button>
+      </div>
+      {state === "error" && <p className="mt-1.5 text-xs text-[#FFB199]">{msg}</p>}
+    </form>
   );
 }
