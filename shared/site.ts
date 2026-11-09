@@ -13,7 +13,7 @@ const STATIC: Record<string, Omit<PageMeta, "path">> = {
     description: "Jotah pre-rolled cones: ultra-thin 13.8 GSM France paper, slow even burn, no rolling needed. Made in India, ₹15 a cone. Order online in Gurgaon & NCR, cash or UPI on delivery.",
   },
   "/product": {
-    title: "Buy Jotah Pre-Rolled Cones Online — Single, 5-Pack, 10-Pack, Box of 25",
+    title: "Buy Jotah Pre-Rolled Cones Online — 5-Pack, 10-Pack, Box of 25",
     description: "Buy Jotah pre-rolled cones online: slow burn, France paper, 13.8 GSM. ₹15 per cone — 5-Pack ₹75, 10-Pack ₹150, Box of 25 ₹375. Cash or UPI on delivery.",
   },
   "/what-the-fun": {

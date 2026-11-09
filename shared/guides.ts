@@ -290,7 +290,7 @@ Jotah cones are stocked in paan and tobacco shops across Gurgaon. If you don't s
 
 ## 2. Order online
 
-[Order Jotah cones on our website](/product) — a single cone, 5-Pack, 10-Pack or Box of 25. Pay by cash or UPI on delivery.
+[Order Jotah cones on our website](/product) — a 5-Pack, 10-Pack or Box of 25. Pay by cash or UPI on delivery. Single cones are available in shops.
 
 ## 3. Order on WhatsApp
 
