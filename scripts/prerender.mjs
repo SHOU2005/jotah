@@ -24,6 +24,10 @@ const swap = (html, re, value, label) => {
   return html.replace(re, value);
 };
 
+// llms.txt — a plain fact sheet for AI assistants (GEO), built from live site data.
+fs.writeFileSync(path.join(dist, "llms.txt"), ssr.llmsTxt());
+console.log("wrote llms.txt");
+
 for (const route of ssr.PRERENDER_ROUTES) {
   const meta = ssr.pageMeta(route);
   const url = ssr.SITE_URL + route;

@@ -2,7 +2,7 @@ import { Switch, Route, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
-import { AgeGate, WhatsAppFloat, ScrollProgress } from "@/components/site-chrome";
+import { AgeGate, MobileBuyBar, WhatsAppFloat, ScrollProgress } from "@/components/site-chrome";
 import { Analytics } from "@vercel/analytics/react";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/cart";
@@ -10,6 +10,7 @@ import Checkout from "@/pages/checkout";
 import Admin from "@/pages/admin";
 import { GuideArticle, GuidesIndex } from "@/pages/guides";
 import Game from "@/pages/game";
+import About from "@/pages/about";
 import Home from "@/pages/home";
 import Product from "@/pages/product";
 import WhatTheFun from "@/pages/what-the-fun";
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/admin" component={Admin} />
       <Route path="/game" component={Game} />
+      <Route path="/about" component={About} />
       <Route path="/guides" component={GuidesIndex} />
       <Route path="/guides/:slug" component={GuideArticle} />
       <Route component={NotFound} />
@@ -42,6 +44,7 @@ export default function App() {
         <Router />
         <CartDrawer />
         <WhatsAppFloat />
+        <MobileBuyBar />
         <AgeGate />
         {/* Vercel Web Analytics: cookieless page views. The private admin page is never tracked. */}
         <Analytics beforeSend={(e) => (new URL(e.url).pathname.startsWith("/admin") ? null : e)} />
