@@ -140,6 +140,7 @@ export function Footer() {
               <li><a className="hover:text-kraft" href="/about">About Jotah</a></li>
               <li><a className="hover:text-kraft" href="/product">Product details</a></li>
               <li><a className="hover:text-kraft" href="/guides">Cone guides</a></li>
+              <li><a className="hover:text-kraft" href="https://shop.jotah.in/blogs/news">Jotah Journal (blog)</a></li>
               <li><a className="hover:text-kraft" href="/game">Play: Stack the Packs</a></li>
               <li><a className="hover:text-kraft" href="/what-the-fun">What The Fun</a></li>
               <li><a className="hover:text-kraft" href="/#buy">Where to buy</a></li>
